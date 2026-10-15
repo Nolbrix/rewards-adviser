@@ -1,6 +1,7 @@
 import json,sys,tempfile,unittest,threading,time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).parents[1]/'companion'))
 try:from connection import local_token
 except ImportError:local_token=None
@@ -38,5 +39,27 @@ class DeviceKeyTests(unittest.TestCase):
             values=list(pool.map(lambda _:local_token(self.root/'same-state',self.root/'same-pc'),range(24)))
         self.assertEqual(len(set(values)),1)
         self.assertEqual(json.loads((self.root/'same-state/config.json').read_text())['token'],values[0])
+
+    def test_key_read_survives_a_temporary_windows_sharing_lock(self):
+        expected=self.key('state','pc1')
+        original=Path.read_text
+        locked=self.root/'state/config.json'
+        attempts=[]
+        def read_with_lock(path,*args,**kwargs):
+            if path==locked:
+                attempts.append(path)
+                if len(attempts)==1:raise PermissionError('Windows sharing lock')
+            return original(path,*args,**kwargs)
+        with patch.object(Path,'read_text',read_with_lock):
+            self.assertEqual(self.key('state','pc1'),expected)
+        self.assertGreaterEqual(len(attempts),2)
+
+    def test_persistent_read_denial_never_replaces_the_existing_key(self):
+        self.key('state','pc1')
+        state=self.root/'state/config.json';device=self.root/'pc1/connection.json'
+        before=(state.read_bytes(),device.read_bytes())
+        with patch.object(Path,'read_text',side_effect=PermissionError('Access denied')),patch('connection.time.sleep'):
+            with self.assertRaises(PermissionError):self.key('state','pc1')
+        self.assertEqual(before,(state.read_bytes(),device.read_bytes()))
 
 if __name__=='__main__':unittest.main()
