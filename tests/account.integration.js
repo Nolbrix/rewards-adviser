@@ -3,6 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),readline=require('node:rea
 const {chromium}=process.env.REWARDS_TEST_PACKAGES?require(path.join(process.env.REWARDS_TEST_PACKAGES,'playwright')):require('playwright');
 const root=path.resolve(__dirname,'..'),work=path.join(root,'work'),base='http://127.0.0.1:18744';
 test('Firebase email flows, private backup and custom appearance work in the MV3 panel with synthetic service responses',{timeout:90000},async()=>{
+ fs.mkdirSync(work,{recursive:true});
  const temp=fs.mkdtempSync(path.join(work,'account-integration-')),publicRoot=path.join(temp,'package'),python=process.env.REWARDS_TEST_PYTHON||'python';let server,context;
  try{
   fs.mkdirSync(publicRoot);const archive=path.join(temp,'public.zip');execFileSync(python,['-c','import sys,zipfile;from pathlib import Path;sys.path.insert(0,str(Path(sys.argv[1])/"companion"));from distribution import build_public_package;build_public_package(Path(sys.argv[1]),Path(sys.argv[2]));zipfile.ZipFile(sys.argv[2]).extractall(sys.argv[3])',root,archive,publicRoot],{windowsHide:true});
