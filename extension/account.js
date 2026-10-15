@@ -1,11 +1,16 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.RewardsAccount=api;})(globalThis,()=>{
  'use strict';
  const THEMES=['blue','red','black','green','purple'];
+ const ROLES=Object.freeze({blue:'ASTRAL',red:'MYTHIC',black:'ECLIPSE',green:'EMERALD',purple:'ARCANE'});
+ const themeRole=theme=>Object.hasOwn(ROLES,theme)?ROLES[theme]:ROLES.blue;
  function cleanProfile(raw={}){
-  const theme=raw.theme||'blue',name=String(raw.name||'').trim().slice(0,60),photo=raw.photo||'';
+  const theme=raw.theme||'blue',name=String(raw.name||'').trim().slice(0,60),photo=raw.photo||'',banner=raw.banner||'',bannerStyle=raw.bannerStyle||(banner?'image':'theme');
   if(!THEMES.includes(theme))throw Error('Tema non valido.');
   if(typeof photo!=='string'||photo.length>180000||photo&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(photo))throw Error('Foto non valida. Scegli JPG, PNG o WebP.');
-  return {theme,name,photo};
+  if(typeof banner!=='string'||banner.length>160000||banner&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(banner))throw Error('Banner non valido. Scegli JPG, PNG o WebP.');
+  if(!['theme','aurora','sunset','midnight','image'].includes(bannerStyle)||bannerStyle==='image'&&!banner)throw Error('Scegli un banner valido.');
+  if(photo.length+banner.length>230000)throw Error('Immagini troppo grandi. Scegli un banner più leggero.');
+  return {theme,name,photo,banner,bannerStyle};
  }
  function createAccount(browser,fetcher=globalThis.fetch,prefix='',backupProvider=null,restoreReader=null){
   let generation=0,signing=false,refreshing=null,configuration=null,cloudSaving=null;
@@ -132,5 +137,5 @@
   async function autoSync(){const {accountSession:s,accountCloudReady:ready}=await storage.get(['accountSession','accountCloudReady']);if(s?.verified&&ready?.uid===s.uid&&ready.stamp===s.stamp)await saveCloud();}
   return {handle,saveCloud,autoSync};
  }
- return {createAccount,cleanProfile,THEMES};
+ return {createAccount,cleanProfile,THEMES,themeRole};
 });
