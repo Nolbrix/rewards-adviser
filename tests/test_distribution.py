@@ -19,7 +19,7 @@ RUNTIME_FILES = (
     'companion/connection.py', 'extension/background.js', 'extension/content.js',
     'extension/core.js', 'extension/parser.js', 'extension/search.js', 'extension/profiles.js',
     'extension/ui/index.html', 'extension/ui/ui.js', 'extension/ui/ui.css',
-    'extension/ui/demo.js', 'extension/icons/icon16.png',
+    'extension/ui/demo.js', 'extension/ui/creator.jpg', 'extension/icons/rewards-adviser.svg', 'extension/icons/icon16.png',
     'extension/icons/icon32.png', 'extension/icons/icon48.png',
     'extension/icons/icon128.png', 'companion/server.py', 'companion/launcher.py',
     'companion/phone_native.py', 'companion/phone_vision.py',
@@ -120,7 +120,7 @@ class PublicPackageTests(unittest.TestCase):
                    'another@example.net', 'third@example.net')
         with self.build() as archive:
             for name in archive.namelist():
-                if name.endswith('.png'):
+                if name.endswith(('.png', '.jpg', '.jpeg')):
                     continue
                 content = archive.read(name).decode('utf-8').casefold()
                 for identity in private:

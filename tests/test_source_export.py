@@ -18,7 +18,7 @@ class PublicSourceTests(unittest.TestCase):
             self.assertFalse(any(n.endswith(('.bmp','.zip')) or 'local-link' in n or 'ABBINAMENTO' in n for n in names))
             self.assertEqual(json.loads((destination/'manifest.json').read_text())['default_locale'],'en')
             for name in names:
-                if name.endswith('.png'):continue
+                if name.endswith(('.png','.jpg','.jpeg')):continue
                 self.assertNotRegex((destination/name).read_text(encoding='utf-8'),r'[A-Za-z]:[\\/]Users[\\/]')
     def test_export_refuses_a_dirty_destination_instead_of_publishing_unknown_files(self):
         self.assertTrue(callable(getattr(export,'export_source',None)))
