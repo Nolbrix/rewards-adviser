@@ -1,0 +1,1000 @@
+{
+  "m7b855ce7525ebc18": {
+    "message": "Settings",
+    "description": "Impostazioni"
+  },
+  "m46fe7e687ea7996a": {
+    "message": "Open in a tab",
+    "description": "Apri in una scheda"
+  },
+  "md8c40758ca4e5e22": {
+    "message": "Your daily overview",
+    "description": "Il tuo riepilogo quotidiano"
+  },
+  "m54f3c030c9e5fbf7": {
+    "message": "Connection setup required",
+    "description": "Collegamento da configurare"
+  },
+  "m3facccb1b702a0c8": {
+    "message": "Everything stays on your PC",
+    "description": "Tutto sul tuo PC"
+  },
+  "m5807a70b7cc07365": {
+    "message": "Overview",
+    "description": "Riepilogo"
+  },
+  "mcfcf369d2dcff609": {
+    "message": "LEFT TO DO TODAY",
+    "description": "DA COMPLETARE OGGI"
+  },
+  "md589d81eb05c8799": {
+    "message": "known points",
+    "description": "punti noti"
+  },
+  "ma77e75280179c789": {
+    "message": "Connect your browser profiles to get started.",
+    "description": "Associa i tuoi profili per iniziare."
+  },
+  "mbe740250729d9341": {
+    "message": "↻ Refresh all",
+    "description": "↻ Aggiorna tutti"
+  },
+  "m9ae9bc137d875319": {
+    "message": "Each account keeps its latest reading.",
+    "description": "Ogni account conserva il suo ultimo aggiornamento."
+  },
+  "meb77b2ef8d80cb10": {
+    "message": "Up to three accounts",
+    "description": "I tuoi tre account"
+  },
+  "mac7c62f2fc5e34ad": {
+    "message": "Automatic Galaxy reader",
+    "description": "Lettura automatica dal Galaxy"
+  },
+  "m593840dc974996ca": {
+    "message": "Bing articles from Galaxy",
+    "description": "Articoli Bing dal Galaxy"
+  },
+  "m272d88628f703e96": {
+    "message": "Automatic reading",
+    "description": "Lettura automatica"
+  },
+  "m49520107de688925": {
+    "message": "Reminders every 10 minutes",
+    "description": "Promemoria ogni 10 minuti"
+  },
+  "m01b343c1fbd044b9": {
+    "message": "Reminders",
+    "description": "Promemoria"
+  },
+  "maede87f2b945829e": {
+    "message": "Only for verified unfinished activities.",
+    "description": "Solo per attività incomplete verificabili."
+  },
+  "m946acdd045c3510b": {
+    "message": "Pause reminders",
+    "description": "Pausa promemoria"
+  },
+  "m84d9719b93e3f44c": {
+    "message": "Reminders enabled",
+    "description": "Promemoria attivi"
+  },
+  "m2dd25de12514fd0e": {
+    "message": "Pause for 30 minutes",
+    "description": "Pausa 30 minuti"
+  },
+  "mb5d44bd2e3e2c81a": {
+    "message": "Pause for 1 hour",
+    "description": "Pausa 1 ora"
+  },
+  "m78141a65f364867b": {
+    "message": "Pause until tomorrow",
+    "description": "Pausa fino a domani"
+  },
+  "mcceb72796b0c5739": {
+    "message": "Article points can be read from a connected, unlocked Galaxy. Other app checks remain manual.",
+    "description": "Le letture articoli possono essere rilevate dal Galaxy collegato e sbloccato. Gli altri controlli dell’app restano manuali."
+  },
+  "m689c754be59735a6": {
+    "message": "THIS BROWSER PROFILE",
+    "description": "QUESTO PROFILO"
+  },
+  "m09b8e48576d479cf": {
+    "message": "Connect your browser",
+    "description": "Collega il tuo browser"
+  },
+  "mca4f800f2bf00b4e": {
+    "message": "Close settings",
+    "description": "Chiudi impostazioni"
+  },
+  "m58e2fac3ae63f98b": {
+    "message": "Run",
+    "description": "Avvia"
+  },
+  "m7c9dd8aedda64ef3": {
+    "message": "choose an available slot and enter your browser and Microsoft account email.",
+    "description": "scegli un posto libero e inserisci browser ed email del tuo account Microsoft."
+  },
+  "me0f9f9e71ba3d6cb": {
+    "message": "Each browser profile reads its own signed-in Rewards account. Do not enter passwords.",
+    "description": "Ogni profilo legge solo il proprio account già connesso a Rewards. Non inserire password."
+  },
+  "mc5afca3db0f1eb53": {
+    "message": "Role of this browser profile",
+    "description": "Profilo di questa finestra"
+  },
+  "m2b4f351bf997ea25": {
+    "message": "Choose a role…",
+    "description": "Scegli il ruolo…"
+  },
+  "m6ceda63fad857bb3": {
+    "message": "Reader 1 — Account 1",
+    "description": "Lettore 1 — Account 1"
+  },
+  "m58ddfa25e62472df": {
+    "message": "Reader 2 — Account 2",
+    "description": "Lettore 2 — Account 2"
+  },
+  "mbbc7360eecc50aae": {
+    "message": "Reader 3 — Account 3",
+    "description": "Lettore 3 — Account 3"
+  },
+  "mc38a8e15eece8152": {
+    "message": "Dashboard and reminders",
+    "description": "Pannello e promemoria"
+  },
+  "m7925666e597623c0": {
+    "message": "Custom",
+    "description": "Personalizzato"
+  },
+  "m2d24cdc23b21626a": {
+    "message": "Choose a role to prepare the settings.",
+    "description": "Seleziona un profilo per compilare la configurazione."
+  },
+  "m289f140393ad748d": {
+    "message": "Account name",
+    "description": "Nome dell'account"
+  },
+  "mbc27caf7da80d883": {
+    "message": "e.g. Personal",
+    "description": "Es. Personale"
+  },
+  "me9cdaea654edc332": {
+    "message": "Microsoft email",
+    "description": "Email Microsoft"
+  },
+  "me884004df8e925d9": {
+    "message": "Your email, or detect it from Rewards",
+    "description": "La tua email, oppure rilevamento da Rewards"
+  },
+  "mcbe6ce1fae8266ba": {
+    "message": "Advanced settings",
+    "description": "Impostazioni avanzate"
+  },
+  "m43476f84219cb373": {
+    "message": "Local connection key",
+    "description": "Chiave locale"
+  },
+  "m1add779fcdf4ef46": {
+    "message": "Filled automatically by AVVIA.cmd",
+    "description": "Compilata automaticamente da AVVIA.cmd"
+  },
+  "m1246dc5c40be2c25": {
+    "message": "Account slot",
+    "description": "Ruolo di questo profilo"
+  },
+  "m6b6de3ae47a12f24": {
+    "message": "Dashboard only",
+    "description": "Solo pannello"
+  },
+  "m1d175e7c13317355": {
+    "message": "Reminder coordinator — enable in one profile only",
+    "description": "Coordinatore dei promemoria — attivalo in un solo profilo"
+  },
+  "m615e9aa613623153": {
+    "message": "Refresh the Rewards dashboard every 2 minutes",
+    "description": "Ricarica la dashboard Rewards ogni 2 minuti"
+  },
+  "mc6111244bcbfbe77": {
+    "message": "Recommended for readers. Keep a Rewards tab open for each account.",
+    "description": "Consigliato nei lettori. Mantieni aperta una scheda Rewards per ogni account."
+  },
+  "m70266ddc203422fa": {
+    "message": "Rewards day and time zone",
+    "description": "Giornata e fuso orario"
+  },
+  "m0ce3810f60c71d0e": {
+    "message": "Italy · Europe/Rome",
+    "description": "Italia · Europe/Rome"
+  },
+  "m7d0b519834b888a0": {
+    "message": "Notifications enabled",
+    "description": "Notifiche attive"
+  },
+  "m36b228de8603ccf6": {
+    "message": "Reset account link",
+    "description": "Nuova associazione"
+  },
+  "m3977f66ee51d4728": {
+    "message": "Test notification",
+    "description": "Prova notifica"
+  },
+  "mac7436964e9db4c5": {
+    "message": "Save and connect",
+    "description": "Salva e collega"
+  },
+  "m49fe365c5f4292df": {
+    "message": "Reset account link clears only this profile's account reading. The key stays on your PC and is never sent to Microsoft.",
+    "description": "Nuova associazione azzera la lettura del solo account collegato a questo profilo. La chiave resta sul PC e non viene inviata a Microsoft."
+  },
+  "m25232532fcf748e4": {
+    "message": "Daily set",
+    "description": "Set giornaliero"
+  },
+  "m36d11bc48b0319b1": {
+    "message": "Extras and bonuses",
+    "description": "Extra e bonus"
+  },
+  "mc6af7fe86dd21f15": {
+    "message": "Bing searches · PC + phone",
+    "description": "Ricerche Bing · PC + telefono"
+  },
+  "m6c070f310899db9a": {
+    "message": "PC searches",
+    "description": "Ricerche PC"
+  },
+  "meb0d0c5cc26ffe9b": {
+    "message": "Phone searches",
+    "description": "Ricerche telefono"
+  },
+  "m5c9a20395714e146": {
+    "message": "Bing on your phone",
+    "description": "Bing sul telefono"
+  },
+  "m9b4144e9c8e6ff0a": {
+    "message": "Open Bing in the source browser profile, sign in to the linked Microsoft account, then refresh Rewards.",
+    "description": "Apri Bing nello stesso profilo sorgente e accedi all’account Microsoft associato, poi aggiorna Rewards."
+  },
+  "md8b54c2b034c80dd": {
+    "message": "Bing shows a different account. Open Bing in the source profile, check the linked Microsoft account and refresh Rewards.",
+    "description": "Bing mostra un altro account. Apri Bing nello stesso profilo sorgente, verifica l’account Microsoft associato e aggiorna Rewards."
+  },
+  "m4eb2856c0926b511": {
+    "message": "Bing's identity could not be verified. Open Bing in the source profile, check the linked Microsoft account and refresh Rewards.",
+    "description": "L’identità di Bing non è verificabile. Apri Bing nello stesso profilo sorgente, verifica l’account Microsoft associato e aggiorna Rewards."
+  },
+  "m059c2999fcfe0e5c": {
+    "message": "Search progress is unavailable. Open Bing in the source profile and refresh Rewards.",
+    "description": "Il contatore delle ricerche non è disponibile. Apri Bing nello stesso profilo sorgente e aggiorna Rewards."
+  },
+  "ma3c471f53b07a876": {
+    "message": "Open Bing in the source profile and refresh Rewards. Search points are not verified yet.",
+    "description": "Apri Bing nello stesso profilo sorgente e aggiorna Rewards. I punti delle ricerche non sono ancora verificabili."
+  },
+  "macc06357a3b74199": {
+    "message": "Bing article reading",
+    "description": "Letture articoli Bing"
+  },
+  "m3f06f9bc98e87320": {
+    "message": "Automatic Galaxy reading is paused.",
+    "description": "Lettura automatica del Galaxy in pausa."
+  },
+  "mc0f5c11758cf8dbe": {
+    "message": "Galaxy recognition needs private calibration before reading.",
+    "description": "Il riconoscimento del Galaxy deve essere configurato prima della lettura."
+  },
+  "m180bc8ad89fea3b8": {
+    "message": "Waiting for Galaxy: keep your phone connected and unlocked.",
+    "description": "In attesa del Galaxy: mantieni il telefono connesso e sbloccato."
+  },
+  "m048344d6144dbc93": {
+    "message": "Automatic reading starts when the PC is idle.",
+    "description": "La lettura automatica parte quando il PC è inattivo."
+  },
+  "m985207de12304309": {
+    "message": "Reading article progress from Galaxy.",
+    "description": "Lettura automatica degli articoli dal Galaxy in corso."
+  },
+  "mcb51e8ee6ddff0de": {
+    "message": "Automatic Galaxy reading is up to date.",
+    "description": "Lettura automatica aggiornata dal Galaxy."
+  },
+  "mb30ce00cc9ec1c9a": {
+    "message": "Reading interrupted: the PC or phone was used.",
+    "description": "Lettura interrotta: il PC o il telefono è stato usato."
+  },
+  "m37b3697acdf60d94": {
+    "message": "The Galaxy counter is unreadable. Points remain unverified.",
+    "description": "Il contatore sul Galaxy non è leggibile. I punti restano da verificare."
+  },
+  "m655e2a0f19117f37": {
+    "message": "An account is unavailable in the Galaxy's Bing app.",
+    "description": "Un account non è disponibile nell’app Bing sul Galaxy."
+  },
+  "m62130c5a2f0d2a08": {
+    "message": "Galaxy reading is unavailable. Check Phone Link.",
+    "description": "Lettura del Galaxy non disponibile. Controlla Collegamento al telefono."
+  },
+  "m44c7cd1f58049ea8": {
+    "message": "The page shows another account. Reset the account link.",
+    "description": "La pagina mostra un altro account. Riassocia il profilo."
+  },
+  "m8f0911c497a4a7a5": {
+    "message": "The session email could not be verified. The previous reading is retained; refresh Rewards.",
+    "description": "Email della sessione non verificabile. La lettura precedente è conservata; aggiorna Rewards."
+  },
+  "mfd4c6adea42db276": {
+    "message": "Unrecognized page or expired session. Reload Rewards; export a diagnostic dump if it persists.",
+    "description": "Pagina non riconosciuta o sessione scaduta. Ricarica Rewards; se persiste, esporta un dump."
+  },
+  "mc2b48b646f12f272": {
+    "message": "This preview uses example data. Actions are available in the installed extension.",
+    "description": "Questa è un’anteprima con dati di esempio. Le azioni sono disponibili nell’estensione installata."
+  },
+  "ma49d50e97a1da6c3": {
+    "message": "The extension did not respond. Reopen the dashboard.",
+    "description": "L’estensione non ha risposto. Riapri il pannello."
+  },
+  "md57bb6a9696cfa72": {
+    "message": "Not detected",
+    "description": "Non rilevato"
+  },
+  "m22eec6078d105ca0": {
+    "message": "No activities",
+    "description": "Nessuna attività"
+  },
+  "m1bf7af0132af8e2b": {
+    "message": "No extras",
+    "description": "Nessun extra"
+  },
+  "m4da503adaa6875b9": {
+    "message": " done",
+    "description": " fatte"
+  },
+  "m08d9ee573f92bab1": {
+    "message": " to do",
+    "description": " da fare"
+  },
+  "ma21c352690cd865c": {
+    "message": "Points unavailable",
+    "description": "Punti non disponibili"
+  },
+  "mefb5fef4cf8f0ee7": {
+    "message": "Reading needs updating",
+    "description": "Letture da aggiornare"
+  },
+  "mc6f18f236b8901f0": {
+    "message": "Articles unverified",
+    "description": "Articoli da verificare"
+  },
+  "m8f4992909d2a08f1": {
+    "message": "Manual confirmation",
+    "description": "Conferma manuale"
+  },
+  "m1fa063fe84e70d86": {
+    "message": "time unavailable",
+    "description": "orario non disponibile"
+  },
+  "m2f492f7dec341dea": {
+    "message": "Read from Galaxy",
+    "description": "Letto dal Galaxy"
+  },
+  "m09e82585c39a18b2": {
+    "message": "needs updating",
+    "description": "da aggiornare"
+  },
+  "me25a6036b5d875ba": {
+    "message": "The last Galaxy reading is outdated and excluded from the total. You can check the app and enter points manually instead.",
+    "description": "L’ultima lettura del Galaxy non è attuale e non entra nel totale. Puoi confermare i punti nell’app e salvarli a mano come alternativa."
+  },
+  "m46b8ba225da2e74e": {
+    "message": "Waiting for automatic Galaxy reading. Article points remain unverified.",
+    "description": "In attesa della lettura automatica dal Galaxy. I punti degli articoli restano da verificare."
+  },
+  "m3063c842f54cb1c2": {
+    "message": "Article points update from Galaxy. Other checks remain manual.",
+    "description": "Le letture articoli si aggiornano dal Galaxy. Gli altri controlli restano manuali."
+  },
+  "m07b2b4b99f564c0b": {
+    "message": "Optional checks for activities visible in the app. Not verified by the website.",
+    "description": "Controlli facoltativi per le attività che vedi nell’app. Non verificati dal sito."
+  },
+  "mf2c7fbfe5d841a0e": {
+    "message": "Manual",
+    "description": "Manuale"
+  },
+  "m2f00c53ee4e7e8f0": {
+    "message": "app only",
+    "description": "solo app"
+  },
+  "m854b8fa968ade31a": {
+    "message": "Status ",
+    "description": "Stato "
+  },
+  "mac4e0792e57750ea": {
+    "message": "Unverified",
+    "description": "Da verificare"
+  },
+  "mb5643aaf84c7014b": {
+    "message": "To do",
+    "description": "Da fare"
+  },
+  "m05981f391fe5e84c": {
+    "message": "Done",
+    "description": "Fatto"
+  },
+  "ma622e67e36e3fcd0": {
+    "message": "Not applicable",
+    "description": "Non presente"
+  },
+  "m2c52d5f707b4732d": {
+    "message": "Remove ",
+    "description": "Rimuovi "
+  },
+  "m3ff217397b5ba7aa": {
+    "message": "Points confirmed in the app (0–30)",
+    "description": "Punti confermati nell’app (0–30)"
+  },
+  "me8ece447140361c6": {
+    "message": "Confirmed Bing article points",
+    "description": "Punti confermati per letture articoli Bing"
+  },
+  "mc5997e85ae513c07": {
+    "message": "Save",
+    "description": "Salva"
+  },
+  "m1d6101e3511a82f0": {
+    "message": "Bing activity name",
+    "description": "Nome attività Bing"
+  },
+  "m8c505bdfa3ae1b9a": {
+    "message": "Add an app activity",
+    "description": "Aggiungi un’attività dell’app"
+  },
+  "mac929bf1a1d53dfa": {
+    "message": "Optional points",
+    "description": "Punti opzionali"
+  },
+  "mfb128e0148bbca04": {
+    "message": "Points",
+    "description": "Punti"
+  },
+  "m97967f1a5ab3fd00": {
+    "message": "Complete",
+    "description": "Completata"
+  },
+  "me6ee39b0ddc9c42c": {
+    "message": "To complete",
+    "description": "Da completare"
+  },
+  "mb03d8d4529b77599": {
+    "message": "Unverified",
+    "description": "Non verificabile"
+  },
+  "m5d690485e9c55f41": {
+    "message": "Microsoft does not show activities in this category.",
+    "description": "Microsoft non mostra attività in questa categoria."
+  },
+  "mb90ac866e24a0a52": {
+    "message": "Open and refresh Rewards in the source profile. Missing data remains unknown.",
+    "description": "Apri e aggiorna Rewards nel profilo sorgente. I dati mancanti restano sconosciuti."
+  },
+  "mbfaed5c67e55572d": {
+    "message": "Check needed",
+    "description": "Da controllare"
+  },
+  "m6f3524690512128a": {
+    "message": "Waiting",
+    "description": "In attesa"
+  },
+  "mb2080792effa262e": {
+    "message": "Previous day",
+    "description": "Giorno precedente"
+  },
+  "me1e425eaed1a993a": {
+    "message": "Needs updating",
+    "description": "Da aggiornare"
+  },
+  "m8f54ed49792aec47": {
+    "message": "Detected activities complete",
+    "description": "Rilevate complete"
+  },
+  "m1d9acb186db8839a": {
+    "message": "Partial data",
+    "description": "Dati parziali"
+  },
+  "m2d10826ade3ff1fc": {
+    "message": "Just updated",
+    "description": "Lettura appena aggiornata"
+  },
+  "m9e90b3cf884bb472": {
+    "message": "Read ",
+    "description": "Lettura di "
+  },
+  "m775d1beee0f74324": {
+    "message": " min ago",
+    "description": " min fa"
+  },
+  "m2216a72634d8b694": {
+    "message": "No reading received",
+    "description": "Nessuna lettura ricevuta"
+  },
+  "m9ff80db013b55df4": {
+    "message": "email linked manually",
+    "description": "email associata a mano"
+  },
+  "m05fe770dcea50056": {
+    "message": "Browser not configured",
+    "description": "Browser da configurare"
+  },
+  "m50d0ea3272bed980": {
+    "message": "Microsoft email to link",
+    "description": "Email Microsoft da associare"
+  },
+  "m51ec087004da7848": {
+    "message": "Balance",
+    "description": "Saldo"
+  },
+  "m77c215f147bd8933": {
+    "message": "known points remaining",
+    "description": "punti mancanti noti"
+  },
+  "m3bc4d19af778e3c3": {
+    "message": "partial total",
+    "description": "totale parziale"
+  },
+  "m2e80681efca344e6": {
+    "message": "Load the extension in the source browser profile and choose this account in settings.",
+    "description": "Carica l’estensione nel profilo sorgente e scegli questo account nelle impostazioni."
+  },
+  "md73743366734c2ee": {
+    "message": "The source profile is not responding.",
+    "description": "Il profilo sorgente non risponde."
+  },
+  "m396344fef1a7b1d4": {
+    "message": "Open Rewards ↗",
+    "description": "Apri Rewards ↗"
+  },
+  "m3a9f1a104e07eacf": {
+    "message": "Refresh account ",
+    "description": "Aggiorna account "
+  },
+  "me5016de3ee7cd439": {
+    "message": "Preview · example data",
+    "description": "Anteprima · dati di esempio"
+  },
+  "me34664ef0d2a4f93": {
+    "message": "Local connection active",
+    "description": "Collegamento locale attivo"
+  },
+  "mc8750dfe02c5b218": {
+    "message": "Local connection unavailable",
+    "description": "Collegamento locale non disponibile"
+  },
+  "m7ba05103b96cba20": {
+    "message": "EXAMPLES · no real accounts",
+    "description": "ESEMPI · nessun account reale"
+  },
+  "mb2ef0229ae61a3ba": {
+    "message": "Account reader ",
+    "description": "Lettore account "
+  },
+  "mee7c3de9f0a19e12": {
+    "message": "Dashboard · up to three accounts",
+    "description": "Pannello dei tre account"
+  },
+  "m02ef224202847f7e": {
+    "message": "Partial total: some activities are unverified.",
+    "description": "Totale parziale: alcune attività non sono verificabili."
+  },
+  "m9f1190a8c9d4d561": {
+    "message": "Sum of detected activities in connected accounts.",
+    "description": "Somma delle attività rilevate negli account collegati."
+  },
+  "mc72a870b1eb2308a": {
+    "message": "Connect your profiles and open Rewards in each browser.",
+    "description": "Collega i profili e apri Rewards in ciascun browser."
+  },
+  "m1ae49beb8a3c3104": {
+    "message": "Paused until ",
+    "description": "In pausa fino alle "
+  },
+  "m79a813df985b944f": {
+    "message": "Notifications disabled in settings.",
+    "description": "Notifiche disattivate nelle impostazioni."
+  },
+  "m5c8e8104782728d4": {
+    "message": "Enabled by the coordinator. Only verified unfinished activities.",
+    "description": "Attivi dal coordinatore. Solo attività incomplete verificabili."
+  },
+  "md2968941f252bf38": {
+    "message": "Enable the coordinator in one browser profile.",
+    "description": "Attiva il coordinatore in un solo profilo."
+  },
+  "m78d8088d81add55e": {
+    "message": "Last cycle: ",
+    "description": "Ultimo ciclo: "
+  },
+  "m2951a27f02c2d233": {
+    "message": "refresh every 2 minutes",
+    "description": "aggiornamento ogni 2 minuti"
+  },
+  "m4d167e5596cfcec0": {
+    "message": "manual refresh",
+    "description": "aggiornamento manuale"
+  },
+  "m846a922ed0c32c71": {
+    "message": "dashboard for up to three accounts",
+    "description": "pannello dei tre account"
+  },
+  "m262ed9f17701d53e": {
+    "message": "Custom settings",
+    "description": "Configurazione personalizzata"
+  },
+  "mbc5b94708b98b69a": {
+    "message": "reminders every 10 minutes",
+    "description": "promemoria ogni 10 minuti"
+  },
+  "mdeb0ebb1a7702855": {
+    "message": "Profile connected. Open Rewards in the source browser to receive the first reading.",
+    "description": "Profilo collegato. Apri Rewards nel browser sorgente per ricevere la prima lettura."
+  },
+  "m5dc8fc62ffbc6db1": {
+    "message": "Account link reset. Enter the new email and save.",
+    "description": "Associazione azzerata. Inserisci la nuova email e salva."
+  },
+  "maf58f5eb6e6115c9": {
+    "message": "Test notification sent. If it does not appear, check Windows notifications.",
+    "description": "Notifica di prova inviata. Se non appare, controlla le notifiche di Windows."
+  },
+  "meddf09e710da8290": {
+    "message": "Request sent to ",
+    "description": "Richiesta inviata a "
+  },
+  "m7bce43b5ef083c5f": {
+    "message": " profile(s). The response may take up to a minute if the page is closed.",
+    "description": " profilo/i. La risposta può richiedere fino a un minuto se la pagina è chiusa."
+  },
+  "m9bb468650c38b90f": {
+    "message": "No reader connected: configure the extension in the source browser profile first.",
+    "description": "Nessun lettore associato: configura prima l’estensione nel profilo sorgente."
+  },
+  "mbdc0a4066001fecd": {
+    "message": "Automatic Galaxy reading enabled. Keep your PC on and your phone connected.",
+    "description": "Lettura automatica del Galaxy attivata. Il PC deve restare acceso e il telefono collegato."
+  },
+  "mc5ad600c0a861141": {
+    "message": "Diagnostic dump exported: email redacted, no cookies or tokens.",
+    "description": "Dump diagnostico esportato: email oscurata, nessun cookie o token."
+  },
+  "m30053a6b6e61def9": {
+    "message": "Enter the article points confirmed in the app: a whole number from 0 to 30.",
+    "description": "Inserisci i punti delle letture confermati nell’app: un numero intero da 0 a 30."
+  },
+  "md296757990579a43": {
+    "message": "Wait for settings to finish saving.",
+    "description": "Attendi il salvataggio delle impostazioni in corso."
+  },
+  "mfd2c8a4f1018af03": {
+    "message": "Connect this profile in settings.",
+    "description": "Collega questo profilo nelle impostazioni."
+  },
+  "mce5eb25ca8447b15": {
+    "message": "Run AVVIA.cmd in the project folder, then reopen settings: the connection will be filled automatically.",
+    "description": "Avvia AVVIA.cmd nella cartella del progetto, poi riapri le impostazioni: il collegamento verrà compilato automaticamente."
+  },
+  "m4fbf2d95be8169ca": {
+    "message": "Choose a valid account.",
+    "description": "Scegli un account valido."
+  },
+  "mb04d0e0165650828": {
+    "message": "Choose this profile's browser.",
+    "description": "Scegli il browser del profilo."
+  },
+  "md1b2cf58f1efc6f9": {
+    "message": "Invalid Microsoft email.",
+    "description": "Email Microsoft non valida."
+  },
+  "m4a0b079115e34516": {
+    "message": "Rewards: activities still to complete",
+    "description": "Rewards: ci sono attività da completare"
+  },
+  "m63e5c45e8e9ca0a5": {
+    "message": "Open overview",
+    "description": "Apri riepilogo"
+  },
+  "mef7afbcb4c52fb7d": {
+    "message": " activities to do",
+    "description": " attività da fare"
+  },
+  "m87435fa53efea61c": {
+    "message": " known points",
+    "description": " punti noti"
+  },
+  "m3f94345a74881133": {
+    "message": "unspecified points",
+    "description": "punti non indicati"
+  },
+  "m231ecb2c4ef34c69": {
+    "message": "This profile is not a reader.",
+    "description": "Questo profilo non è un lettore."
+  },
+  "mc9beaf3c06d884bd": {
+    "message": "Rewards Adviser · test",
+    "description": "Rewards Adviser · prova"
+  },
+  "m98e6bc14e4279de6": {
+    "message": "Reminders are ready. Automatic reminders arrive every 10 minutes when verified activities remain unfinished.",
+    "description": "I promemoria sono pronti. Quelli automatici arrivano ogni 10 minuti quando ci sono attività incomplete verificabili."
+  },
+  "m04cceef5540d823d": {
+    "message": "Action unavailable.",
+    "description": "Operazione non disponibile."
+  },
+  "ma16d279a70b2ae1a": {
+    "message": "Choose Reader 1, Reader 2, Reader 3 or Dashboard.",
+    "description": "Scegli Lettore 1, Lettore 2, Lettore 3 oppure Pannello."
+  },
+  "mcb556bf54d0f8f0b": {
+    "message": "Dashboard",
+    "description": "Pannello"
+  },
+  "md8e64a727c2dc075": {
+    "message": "Daily quiz",
+    "description": "Quiz del giorno"
+  },
+  "mf4d4e93b341ef663": {
+    "message": "Daily poll",
+    "description": "Sondaggio quotidiano"
+  },
+  "m341170a4268b95d7": {
+    "message": "Discover something new",
+    "description": "Scopri qualcosa di nuovo"
+  },
+  "mfb53c16f61de522f": {
+    "message": "A new opportunity",
+    "description": "Una nuova opportunità"
+  },
+  "md28455a7e72c4d8c": {
+    "message": "PC searches",
+    "description": "Ricerche da PC"
+  },
+  "mf19c2f05ba007792": {
+    "message": "Phone searches",
+    "description": "Ricerche da telefono"
+  },
+  "ma7c7de12500662c6": {
+    "message": "The profile link has changed",
+    "description": "Associazione del profilo cambiata"
+  },
+  "m7a4b28e5f3a4fbdd": {
+    "message": "Account change detected: use Reset account link to confirm the identity.",
+    "description": "Cambio account rilevato: usa Nuova associazione per confermare l’identità."
+  },
+  "m0079dfdbb2c23c96": {
+    "message": "Different email: use Reset account link before changing accounts.",
+    "description": "Email diversa: usa Nuova associazione prima di cambiare account."
+  },
+  "m7579bcdea528cd0e": {
+    "message": "The phone reading identity does not match the linked account",
+    "description": "L’identità della lettura telefono non corrisponde all’account associato"
+  },
+  "m6bc5cb736bfa7387": {
+    "message": "This reading belongs to the previous configuration",
+    "description": "La lettura appartiene alla configurazione precedente"
+  },
+  "m0e45c53150379511": {
+    "message": "Automatic phone reading is paused",
+    "description": "La lettura automatica del telefono è in pausa"
+  },
+  "m95b09e2abab188b6": {
+    "message": "The Microsoft page shows another account. Use Reset account link to confirm the change.",
+    "description": "La pagina Microsoft mostra un altro account. Usa Nuova associazione per confermare il cambio."
+  },
+  "m3d3b859ca3d9dcc4": {
+    "message": "You can reset only the current profile's link",
+    "description": "Puoi riassociare solo il profilo corrente"
+  },
+  "m1c2624094edac1f6": {
+    "message": "This account slot is already linked to another profile. Choose an available slot.",
+    "description": "Questo account è già associato a un altro profilo. Scegli uno slot libero."
+  },
+  "mcfa00cde35c7ca2e": {
+    "message": "Another profile is already the coordinator. Disable it in settings first.",
+    "description": "Un altro profilo è già coordinatore. Disattivalo prima nelle impostazioni."
+  },
+  "ma2a12661a45c6acc": {
+    "message": "A newer phone reading is already available",
+    "description": "Una lettura telefono più recente è già disponibile"
+  },
+  "mc2d8fa5ab6f4437b": {
+    "message": "Invalid account",
+    "description": "Account non valido"
+  },
+  "ma9e70570536357c2": {
+    "message": "Invalid phone account",
+    "description": "Account telefono non valido"
+  },
+  "mfed999c0f5cf78f8": {
+    "message": "Link this profile to an account in settings",
+    "description": "Associa questo profilo a un account nelle impostazioni"
+  },
+  "m9a035f08ae961b1c": {
+    "message": "Invalid activity",
+    "description": "Attività non valida"
+  },
+  "mc13e714f901eb44e": {
+    "message": "Command not allowed",
+    "description": "Comando non consentito"
+  },
+  "m0a376253cba907fc": {
+    "message": "Confirm a whole number from 0 to 30 for Bing article points",
+    "description": "Conferma da 0 a 30 punti interi per le letture articoli Bing"
+  },
+  "mffb5766039b986d1": {
+    "message": "Invalid manual article confirmation",
+    "description": "Conferma manuale articoli non valida"
+  },
+  "m16d64a9751576374": {
+    "message": "Missing configuration",
+    "description": "Configurazione mancante"
+  },
+  "m79618dbddaf96582": {
+    "message": "Invalid phone article counter",
+    "description": "Contatore articoli telefono non valido"
+  },
+  "m11c7a454245f1691": {
+    "message": "Invalid points counter",
+    "description": "Contatore punti non valido"
+  },
+  "mb35c17b6f407f225": {
+    "message": "Invalid coverage",
+    "description": "Copertura non valida"
+  },
+  "m3491ebff60f2a361": {
+    "message": "Invalid reading timestamp",
+    "description": "Data della lettura non valida"
+  },
+  "m56df3a5056862181": {
+    "message": "Invalid phone reading timestamp",
+    "description": "Data della lettura telefono non valida"
+  },
+  "m8e968861e29c0b8b": {
+    "message": "Invalid phone reader timestamp",
+    "description": "Data lettore telefono non valida"
+  },
+  "mfe852036fadaa483": {
+    "message": "Invalid diagnostics",
+    "description": "Diagnosi non valida"
+  },
+  "m0d06b8e0d3966783": {
+    "message": "Invalid phone diagnostics",
+    "description": "Diagnostica telefono non valida"
+  },
+  "mb60b3a35c7e5da75": {
+    "message": "Invalid activity list",
+    "description": "Elenco attività non valido"
+  },
+  "mc550a0a8b7741436": {
+    "message": "Invalid email",
+    "description": "Email non valida"
+  },
+  "mcbdc939b95653d70": {
+    "message": "JSON format required",
+    "description": "Formato JSON richiesto"
+  },
+  "m566763e9417320c0": {
+    "message": "Missing activity ID",
+    "description": "Identificatore attività mancante"
+  },
+  "m5132ad6c84462290": {
+    "message": "Invalid identity",
+    "description": "Identità non valida"
+  },
+  "mb578348b6948c453": {
+    "message": "The service is available only on this PC",
+    "description": "Il servizio è disponibile soltanto sul PC locale"
+  },
+  "m57347421338fe459": {
+    "message": "The phone reading crosses midnight",
+    "description": "La lettura telefono attraversa il cambio giornata"
+  },
+  "me0af7b52593b8d31": {
+    "message": "The phone reading is not from today",
+    "description": "La lettura telefono non appartiene alla giornata corrente"
+  },
+  "mda323b0630c24ec2": {
+    "message": "Invalid reading",
+    "description": "Lettura non valida"
+  },
+  "mde00ca10645af205": {
+    "message": "At most 30 manual activities",
+    "description": "Massimo 30 attività manuali"
+  },
+  "mb66f2709d473a6bb": {
+    "message": "Invalid search mode",
+    "description": "Modalità ricerche non valida"
+  },
+  "m0b3c333dc63e396d": {
+    "message": "A JSON object is required",
+    "description": "Oggetto JSON richiesto"
+  },
+  "mdb0675a5e76afa8e": {
+    "message": "Action unavailable",
+    "description": "Operazione non disponibile"
+  },
+  "m392a617939245c28": {
+    "message": "Invalid pause",
+    "description": "Pausa non valida"
+  },
+  "m8e81caa257610525": {
+    "message": "Invalid phone reader setting",
+    "description": "Preferenza lettura telefono non valida"
+  },
+  "mebd08a20cd43b8ae": {
+    "message": "Invalid notification setting",
+    "description": "Preferenza notifiche non valida"
+  },
+  "mfb1b66b79a46e782": {
+    "message": "Invalid profile",
+    "description": "Profilo non valido"
+  },
+  "m803eb3d3f5e06121": {
+    "message": "Progress exceeds the maximum",
+    "description": "Progressi superiori al massimo"
+  },
+  "m3702686b9c150a77": {
+    "message": "Confirmed points are supported only for Bing article reading",
+    "description": "Punti confermati disponibili solo per le letture articoli Bing"
+  },
+  "m3447119be0d53909": {
+    "message": "This version uses the Europe/Rome Rewards day in all readers",
+    "description": "Questa versione usa la giornata italiana Europe/Rome in tutti i lettori"
+  },
+  "med5e750f8f57350d": {
+    "message": "Request too large or empty",
+    "description": "Richiesta troppo grande o vuota"
+  },
+  "mb6dd21761daf1f4d": {
+    "message": "Invalid activity status",
+    "description": "Stato attività non valido"
+  },
+  "mfa3382edc620d6b6": {
+    "message": "Invalid phone reader status",
+    "description": "Stato lettore telefono non valido"
+  },
+  "mc9999fc9d4ec613e": {
+    "message": "Invalid text",
+    "description": "Testo non valido"
+  },
+  "m764b69b2e7fe868f": {
+    "message": "Missing or incorrect connection key",
+    "description": "Chiave di collegamento errata o mancante"
+  },
+  "m8c7446cfae30439b": {
+    "message": "Local host required",
+    "description": "Host locale richiesto"
+  },
+  "m5673ee0354f123a5": {
+    "message": "Origin not allowed",
+    "description": "Origine non autorizzata"
+  },
+  "m40f9a5c19514cbb6": {
+    "message": "Route unavailable",
+    "description": "Percorso non disponibile"
+  },
+  "me2f9e884d633ea46": {
+    "message": "Invalid request",
+    "description": "Richiesta non valida"
+  },
+  "mf242a7627a78047f": {
+    "message": "Incomplete request",
+    "description": "Richiesta incompleta"
+  },
+  "extensionName": {
+    "message": "Rewards Adviser"
+  },
+  "extensionDescription": {
+    "message": "Up to three Rewards accounts: progress, phone points and local reminders."
+  }
+}
