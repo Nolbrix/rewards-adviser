@@ -1307,6 +1307,34 @@
     "message": "Operazione account non riconosciuta.",
     "description": "Operazione account non riconosciuta."
   },
+  "mee965d20bc5c1472": {
+    "message": " · da aggiornare",
+    "description": " · da aggiornare"
+  },
+  "m95ff16322d7f0099": {
+    "message": "<p class=\"help\">Dati dell’ultima lettura, esclusi dal totale attuale finché Rewards non viene aggiornato.</p>",
+    "description": "<p class=\"help\">Dati dell’ultima lettura, esclusi dal totale attuale finché Rewards non viene aggiornato.</p>"
+  },
+  "m44909d04628b711d": {
+    "message": "punti confermati a mano<br>lettura Rewards da aggiornare",
+    "description": "punti confermati a mano<br>lettura Rewards da aggiornare"
+  },
+  "m52dbe97403c46ae9": {
+    "message": "totale da aggiornare<br>ultima lettura conservata",
+    "description": "totale da aggiornare<br>ultima lettura conservata"
+  },
+  "m2df73b9f0eca3adf": {
+    "message": "<br>Il profilo sorgente non risponde. Apri il suo browser e lascia Rewards aperto.",
+    "description": "<br>Il profilo sorgente non risponde. Apri il suo browser e lascia Rewards aperto."
+  },
+  "m7805bd45b4836b95": {
+    "message": "<br>Il lettore è collegato, ma la lettura Rewards non è aggiornata. Apri Rewards e premi aggiorna.",
+    "description": "<br>Il lettore è collegato, ma la lettura Rewards non è aggiornata. Apri Rewards e premi aggiorna."
+  },
+  "m96f174431d68d840": {
+    "message": "punti telefono confermati<br>lettura Rewards da aggiornare",
+    "description": "punti telefono confermati<br>lettura Rewards da aggiornare"
+  },
   "extensionName": {
     "message": "Rewards Adviser"
   },
