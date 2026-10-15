@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rewards Adviser</title><link rel="stylesheet" href="ui.css"></head>
+<body>
+ <header><div class="brand"><span class="brand-icon" aria-hidden="true">✓</span><div><h1>Rewards <span>Adviser</span></h1><p id="today">Il tuo riepilogo quotidiano</p></div></div><div class="tools"><button id="expand" title="Apri in una scheda" aria-label="Apri in una scheda">↗</button><button id="settings" title="Impostazioni">Impostazioni</button></div></header>
+ <div class="statusbar"><span id="connection" class="status">Collegamento da configurare</span><span id="mode">Tutto sul tuo PC</span></div>
+ <main>
+  <section class="overview" aria-label="Riepilogo"><div><p class="eyebrow">DA COMPLETARE OGGI</p><div class="hero-number"><span id="total">—</span><span>punti noti</span></div><p id="total-note">Associa i tuoi profili per iniziare.</p></div><div class="overview-actions"><button class="primary" id="refresh">↻ Aggiorna tutti</button><span id="refresh-note">Ogni account conserva il suo ultimo aggiornamento.</span></div></section>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <section id="accounts" class="account-grid" aria-label="I tuoi tre account"></section>
+  <section class="reminder-panel" aria-label="Lettura automatica dal Galaxy"><div><strong>Articoli Bing dal Galaxy</strong><p id="phone-reader-status" role="status">Lettura automatica del Galaxy in pausa.</p></div><label class="check"><input type="checkbox" id="phone-reader-enabled">Lettura automatica</label></section>
+  <section class="reminder-panel" aria-label="Promemoria"><div><span class="bell" aria-hidden="true">◷</span><strong>Promemoria ogni 10 minuti</strong><p id="reminder-note">Solo per attività incomplete verificabili.</p></div><div class="pause-tools"><label class="sr-only" for="pause">Pausa promemoria</label><select id="pause"><option value="0">Promemoria attivi</option><option value="30">Pausa 30 minuti</option><option value="60">Pausa 1 ora</option><option value="tomorrow">Pausa fino a domani</option></select></div></section>
+  <footer>Le letture articoli possono essere rilevate dal Galaxy collegato e sbloccato. Gli altri controlli dell’app restano manuali.</footer>
+ </main>
+ <dialog id="config-dialog" aria-labelledby="config-title"><form id="config-form"><div class="dialog-head"><div><p class="eyebrow">QUESTO PROFILO</p><h2 id="config-title">Collega il tuo browser</h2></div><button type="button" id="close-config" aria-label="Chiudi impostazioni">×</button></div>
+  <p class="help">Avvia <strong>AVVIA.cmd</strong>, scegli un posto libero e inserisci browser ed email del tuo account Microsoft. Ogni profilo legge solo il proprio account già connesso a Rewards. Non inserire password.</p>
+  <label>Ruolo di questa finestra<select id="profile" required><option value="">Scegli il ruolo…</option><option value="reader1">Lettore 1 — Account 1</option><option value="reader2">Lettore 2 — Account 2</option><option value="reader3">Lettore 3 — Account 3</option><option value="panel">Pannello e promemoria</option><option value="custom">Personalizzato</option></select></label>
+  <div id="profile-summary" class="profile-summary" aria-live="polite">Seleziona un profilo per compilare la configurazione.</div>
+  <div class="form-grid"><label>Browser<select id="browser"><option>Edge</option><option>Chrome</option><option>Brave</option></select></label><label>Email Microsoft (facoltativa)<input id="email" type="email" autocomplete="off" placeholder="La tua email, oppure rilevamento da Rewards"></label></div>
+  <label>Nome dell'account<input id="alias" maxlength="80" placeholder="Es. Personale"></label>
+  <details id="advanced-config" class="settings-advanced"><summary>Impostazioni avanzate</summary>
+  <label>Chiave locale<input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Compilata automaticamente da AVVIA.cmd"></label>
+  <label>Ruolo di questo profilo<select id="slot"><option value="">Solo pannello</option><option value="1">Account 1</option><option value="2">Account 2</option><option value="3">Account 3</option></select></label>
+  <label class="check"><input type="checkbox" id="coordinator">Coordinatore dei promemoria — attivalo in un solo profilo</label>
+  <label class="check"><input type="checkbox" id="auto-refresh">Ricarica la dashboard Rewards ogni 2 minuti</label><p class="help compact">Consigliato nei lettori. Mantieni aperta una scheda Rewards per ogni account.</p>
+  <div class="form-grid"><label>Giornata e fuso orario<select id="timezone"><option value="Europe/Rome">Italia · Europe/Rome</option></select></label><label class="check"><input id="notifications" type="checkbox" checked>Notifiche attive</label></div>
+  </details>
+  <p id="config-error" class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" id="reset">Nuova associazione</button><button type="button" id="test-notification">Prova notifica</button><button class="primary" type="submit">Salva e collega</button></div>
+  <p class="help compact">Nuova associazione azzera la lettura del solo account collegato a questo profilo. La chiave resta sul PC e non viene inviata a Microsoft.</p>
+ </form></dialog>
+ <script src="../strings.js"></script><script src="../i18n.js"></script><script src="../core.js"></script><script src="../profiles.js"></script><script src="demo.js"></script><script src="ui.js"></script>
+</body></html>
