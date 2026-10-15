@@ -40,6 +40,10 @@ Firebase processes authentication and stores a private backup of the local conne
 
 Use **Restore settings** to recover appearance and choose a reader for the current browser profile. A different PC retains its own newly generated connection key. An explicit **Download private backup** includes the saved key: keep that personal file private. Detailed setup and data handling: [Firebase setup](docs/AUTH-SETUP.md). No PayPal payment or subscription is enabled.
 
+## Point totals
+
+Points already earned but still waiting to be claimed appear in **Points to claim**. They are excluded from **Left to do today**, which sums only measured incomplete earning activities. Older captures cannot replace newer readings. A newer identity-checked Bing balance can update the dashboard balance. Missing PC/phone counters remain unknown.
+
 ## Phone points
 
 PC/phone searches are used only when Bing exposes authenticated, identity-checked counters. Missing data remains unknown; it never means zero or complete.

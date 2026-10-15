@@ -1,6 +1,6 @@
 {
   "name": "rewards-adviser",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "private": true,
   "description": "Local Microsoft Rewards dashboard for up to three browser profiles",
   "scripts": {
