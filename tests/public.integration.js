@@ -14,7 +14,7 @@ test('a clean shared package loads, configures a generic reader and detects its 
   const token=await new Promise((resolve,reject)=>{let error='';server.stderr.on('data',s=>error+=s);server.once('exit',code=>reject(new Error('Public relay startup failed: '+code+' '+error)));readline.createInterface({input:server.stdout}).once('line',line=>resolve(JSON.parse(line).token));setTimeout(()=>reject(new Error('Public relay startup timeout')),5000).unref();});
   fs.writeFileSync(path.join(publicRoot,'extension/local-link.json'),JSON.stringify({app:'rewards-realtime-adviser',token}));
   fs.mkdirSync(path.join(temp,'profile/Default'),{recursive:true});fs.writeFileSync(path.join(temp,'profile/Default/Preferences'),JSON.stringify({extensions:{ui:{developer_mode:true}}}));
-  context=await chromium.launchPersistentContext(path.join(temp,'profile'),{executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--enable-unsafe-extension-debugging',`--disable-extensions-except=${publicRoot}`,`--load-extension=${publicRoot}`],viewport:{width:780,height:720}});
+  context=await chromium.launchPersistentContext(path.join(temp,'profile'),{executablePath:process.env.REWARDS_TEST_BROWSER||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--enable-unsafe-extension-debugging',`--disable-extensions-except=${publicRoot}`,`--load-extension=${publicRoot}`],viewport:{width:780,height:720}});
   await context.route('https://www.bing.com/**',route=>{
    if(!route.request().url().includes('/rewardsapp/flyoutdata'))return route.fulfill({contentType:'text/html',body:'<script>var _model = {"UserEmail":"reader@example.com"};</script>'});
    const data={IsAuthenticated:true,UserId:'public-fixture-search-user',FlyoutResult:{}};
@@ -25,7 +25,7 @@ test('a clean shared package loads, configures a generic reader and detects its 
   const session=await context.browser().newBrowserCDPSession(),extension=await session.send('Extensions.loadUnpacked',{path:publicRoot});
   const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));await page.goto(`chrome-extension://${extension.id}/extension/ui/index.html`);
   await page.getByRole('button',{name:/^(Impostazioni|Settings)$/,exact:true}).click();await page.locator('#config-dialog').waitFor({state:'visible'});
-  assert.equal(await page.locator('#token').inputValue(),token);assert.match(await page.locator('#profile').textContent(),/Lettore 1/);assert.ok(!/PersonalFixture|PrivateFixture/i.test(await page.locator('body').textContent()));
+  assert.equal(await page.locator('#token').inputValue(),token);assert.match(await page.locator('#profile').textContent(),/Lettore 1|Reader 1/);assert.ok(!/PersonalFixture|PrivateFixture/i.test(await page.locator('body').textContent()));
   await page.locator('#profile').selectOption('reader1');assert.equal(await page.locator('#email').inputValue(),'');assert.equal(await page.locator('#slot').inputValue(),'1');assert.equal(await page.locator('#alias').inputValue(),'Account 1');
   await page.getByRole('button',{name:/^(Salva e collega|Save and connect)$/}).click();await page.waitForFunction(()=>!document.querySelector('#config-dialog').open||document.querySelector('#config-error').textContent);assert.equal(await page.locator('#config-error').textContent(),'');
   await page.addScriptTag({url:`chrome-extension://${extension.id}/extension/parser.js`});
