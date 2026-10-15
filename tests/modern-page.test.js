@@ -14,7 +14,8 @@ test('the saved modern Rewards HTML is recognized without executing page scripts
   if(process.env.REWARDS_SAVED_HTML)assert.equal(result.account.email,'alice@example.com');
   const daily=result.activities.filter(a=>a.category==='daily');assert.equal(daily.length,3);
   assert.deepEqual(daily.map(a=>[a.title,a.total,a.earned,a.status]),[['Prossimi eventi vicino a me',10,0,'incomplete'],['Chicago Foliage Ventoso',10,0,'incomplete'],['Maestà di Borobudur?',10,0,'incomplete']]);
-  const claim=result.activities.find(a=>a.id==='pointsclaim');assert.equal(claim.total,109);assert.equal(claim.earned,0);
+  const claim=result.activities.find(a=>a.id==='pointsclaim');assert.equal(claim.category,'claim');assert.equal(claim.total,109);assert.equal(claim.earned,0);
+  assert.ok(!result.activities.some(a=>a.id==='pointsclaim'&&a.category==='extra'));
   assert.equal(result.coverage.search,false);assert.equal(result.coverage.mobile,false);
  }finally{await browser.close();}
 });

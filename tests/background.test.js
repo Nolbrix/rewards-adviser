@@ -28,6 +28,17 @@ test('a requested refresh prevents the same alarm from immediately reloading the
  const a=factory(b.browser,async url=>({ok:true,json:async()=>{if(url.endsWith('/api/heartbeat')&&!delivered){delivered=true;return {state:{accounts:[]},commands:[{id:'refresh-one',action:'refresh'}]};}return {state:{accounts:[]},commands:[]};}}));
  await a.alarm('rewards-sync');assert.deepEqual(b.reloaded,[1]);
 });
+test('a refresh delivered during capture discards the previous dashboard snapshot',async()=>{
+ const b=boundary(),sent=[];b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:1,email:'',browser:'Chrome'};
+ const a=factory(b.browser,async(url,options)=>{if(url.endsWith('/api/snapshot'))sent.push(JSON.parse(options.body));return {ok:true,json:async()=>url.endsWith('/api/heartbeat')?{state:{accounts:[]},commands:[{id:'refresh-during-capture',action:'refresh'}]}:{state:{accounts:[]},accepted:true}};});
+ const observedAt=Date.now()-1000;const result=await a.capture({date:require('../extension/core.js').dayKey(observedAt),observedAt,account:{email:null},balance:100,activities:[],coverage:{},diagnostics:{recognized:true}});
+ assert.deepEqual(b.reloaded,[1]);assert.equal(result.accepted,false);assert.equal(sent.length,0);assert.equal(b.store.localSnapshot,undefined);
+});
+test('a delayed old document cannot post after a refresh in the same worker',async()=>{
+ const f=searchCaptureFixture();await f.adviser.performCommand({action:'refresh'});
+ f.snapshot.observedAt=Date.now()-20000;const result=await f.adviser.capture(f.snapshot);
+ assert.equal(result.accepted,false);assert.equal(f.sent.length,0);assert.ok(!f.b.store.searchBinding);
+});
 test('a reader with automatic refresh disabled does not reopen its dashboard',async()=>{
  const b=boundary();b.tabs.splice(0,1);b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:2,browser:'Chrome',autoRefresh:false};
  const a=factory(b.browser,async()=>({ok:true,json:async()=>({state:{accounts:[]},commands:[]})}));await a.alarm('rewards-sync');assert.equal(b.created.length,0);
@@ -114,6 +125,34 @@ test('reconfiguring a reader cancels an in-flight counter capture before it can 
  const f=searchCaptureFixture({pauseHome:async()=>{entered();await unblock;}}),pending=f.adviser.capture(f.snapshot);
  await started;await f.adviser.saveConfig({slot:2,email:'bob@example.com',browser:'Chrome',token:'a'.repeat(48),alias:'Bob',coordinator:false,autoRefresh:true});release();await pending;
  assert.equal(f.sent.length,0);assert.ok(!f.b.store.searchBinding);assert.equal(f.b.store.config.email,'bob@example.com');
+});
+test('a newer concurrent dashboard capture cannot be overwritten by a slower old capture',async()=>{
+ let entered,release,homeReads=0;const started=new Promise(resolve=>entered=resolve),unblock=new Promise(resolve=>release=resolve);
+ const f=searchCaptureFixture({pauseHome:async()=>{if(++homeReads===1){entered();await unblock;}}});
+ const now=Date.now();f.snapshot.observedAt=now-1000;f.snapshot.activities=[{id:'daily',category:'daily',earned:0,total:10,status:'incomplete'}];
+ const old=f.adviser.capture(f.snapshot);await started;
+ await f.adviser.capture({...f.snapshot,observedAt:now,activities:[{...f.snapshot.activities[0],earned:10,status:'complete'}]});release();await old;
+ assert.deepEqual(f.sent.map(s=>s.activities.find(a=>a.category==='daily').earned),[10]);assert.equal(f.b.store.localSnapshot.activities.find(a=>a.category==='daily').earned,10);
+});
+test('a cancelled old Bing response cannot poison the cache reused by the next current capture',async()=>{
+ let entered,release,flyouts=0;const started=new Promise(resolve=>entered=resolve),unblock=new Promise(resolve=>release=resolve),b=boundary(),sent=[];
+ b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:1,browser:'Chrome',email:'alice@example.com'};
+ const a=factory(b.browser,async(url,options)=>{
+  if(url==='https://www.bing.com/')return {ok:true,url,text:async()=>'<script>var _model = {"UserEmail":"alice@example.com"};</script>'};
+  if(url.includes('/rewardsapp/flyoutdata')){const older=++flyouts===1;return {ok:true,url,text:async()=>{if(older){entered();await unblock;}return JSON.stringify({IsAuthenticated:true,UserId:older?'stale-subject':'current-subject',FlyoutResult:{UserStatus:{AvailablePoints:older?100:200,Counters:{PCSearch:[{OfferId:'pc',PointProgress:older?0:30,PointProgressMax:60}]}},Layout:{Controls:{body:[{CustomProperties:{Counter:'PcCombined'}}]}}}});}};}
+  if(url.endsWith('/api/snapshot'))sent.push(JSON.parse(options.body).snapshot);
+  return {ok:true,json:async()=>({state:{accounts:[]},accepted:true})};
+ });
+ const now=Date.now(),snapshot={date:require('../extension/core.js').dayKey(now),observedAt:now-1000,account:{email:'alice@example.com'},balance:100,activities:[],coverage:{},diagnostics:{recognized:true}};
+ const older=a.capture(snapshot);await started;const current={...snapshot,observedAt:now,balance:200};await a.capture(current);const binding=JSON.stringify(b.store.searchBinding);release();await older;
+ await a.capture(current);
+ assert.deepEqual(sent.map(s=>s.activities.find(item=>item.category==='search').earned),[30,30]);assert.deepEqual(sent.map(s=>s.balance),[200,200]);assert.equal(b.store.searchCache.reading.activities[0].earned,30);assert.equal(JSON.stringify(b.store.searchBinding),binding);assert.equal(flyouts,2);
+});
+test('a refresh cancels an in-flight Bing capture before it restores the cleared search cache',async()=>{
+ let entered,release;const started=new Promise(resolve=>entered=resolve),unblock=new Promise(resolve=>release=resolve);
+ const f=searchCaptureFixture({pauseHome:async()=>{entered();await unblock;}}),old=f.adviser.capture(f.snapshot);
+ await started;await f.adviser.performCommand({action:'refresh'});release();await old;
+ assert.equal(f.sent.length,0);assert.equal(f.b.store.searchCache,null);assert.ok(!f.b.store.searchBinding);
 });
 test('a capture starting during a configuration change cannot read the previous profile into the new slot',async()=>{
  let entered,release;const started=new Promise(resolve=>entered=resolve),unblock=new Promise(resolve=>release=resolve);

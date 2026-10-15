@@ -39,9 +39,21 @@ test('modern streamed Rewards dashboard yields spendable balance and three incom
 test('modern claimable points stay distinct from the balance and completed monthly bonus has no outstanding points',()=>{
  const s=parser.readFlight([flightScript(flightRecords)],flightOptions);
  assert.equal(s.balance,40590);const claim=s.activities.find(a=>a.id==='pointsclaim');
- assert.equal(claim.total,109);assert.equal(claim.earned,0);assert.equal(claim.status,'incomplete');
+ assert.equal(claim.category,'claim');assert.equal(claim.total,109);assert.equal(claim.earned,0);assert.equal(claim.status,'incomplete');
  const bonus=s.activities.find(a=>a.id==='starbonus');assert.equal(bonus.status,'complete');assert.equal(bonus.earned,bonus.total);
  assert.equal(s.coverage.search,false);assert.equal(s.coverage.mobile,false);assert.equal(s.coverage.extra,false);
+});
+
+test('accumulated claimable credits remain separate from daily earning activities and extra promotions',()=>{
+ const entries=[{category:'mtb',date:'2026-10',points:420},{category:'gub',date:'2026-10',points:60},{category:'ds',date:'2026-09',points:224},{category:'ds',date:'2026-10',points:248},{category:'bseb',date:'2026-10',points:210}];
+ const records=[['1',{type:'pointsclaim',model:{pointClaim:{points:1162,entries}}}],['2',{type:'dailyset',model:{dailySetItems:dailyItems}}]];
+ const s=parser.readFlight([flightScript(records)],flightOptions);
+ const claim=s.activities.find(a=>a.id==='pointsclaim');
+ assert.equal(claim.category,'claim');assert.equal(claim.total,1162);assert.equal(claim.earned,0);
+ assert.equal(s.activities.filter(a=>a.category==='daily').reduce((sum,a)=>sum+a.total-a.earned,0),30);
+ assert.equal(s.activities.filter(a=>a.category==='extra').length,0);
+ const extra=parser.fromData({...fixture,morePromotions:[{offerId:'pointsclaim-bonus',title:'Daily bonus credit',points:10,complete:false}]},options);
+ assert.equal(extra.activities.find(a=>a.id==='pointsclaim-bonus').category,'extra');
 });
 test('Flight records split across scripts decode inert JSON and never execute supplied JavaScript',()=>{
  const text='31:'+JSON.stringify(['$','$L56',null,{balance:40590,level:3}])+'\n';

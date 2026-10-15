@@ -56,6 +56,29 @@ class ServiceTests(unittest.TestCase):
         self.request('/api/snapshot',{'clientId':'reader-one','snapshot':self.snapshot(activities=[],balance=None,diagnostics={'recognized':False,'method':'unrecognized'})})
         account=self.request('/api/state')[1]['accounts'][0]
         self.assertEqual(account['snapshot']['balance'],12345);self.assertEqual(account['error'],'page-unrecognized')
+    def test_delayed_snapshot_cannot_replace_newer_points(self):
+        self.register()
+        stamp=int(time.time()*1000)
+        self.request('/api/snapshot',{'clientId':'reader-one','snapshot':self.snapshot(observedAt=stamp,balance=200)})
+        status,response=self.request('/api/snapshot',{'clientId':'reader-one','snapshot':self.snapshot(observedAt=stamp-20000,balance=100)})
+        self.assertEqual(status,200);self.assertFalse(response['accepted'])
+        self.assertEqual(response['state']['accounts'][0]['snapshot']['balance'],200)
+    def test_delayed_page_errors_cannot_disable_a_newer_valid_reading(self):
+        self.register()
+        stamp=int(time.time()*1000)
+        self.request('/api/snapshot',{'clientId':'reader-one','snapshot':self.snapshot(observedAt=stamp,balance=200)})
+        for stale in (self.snapshot(observedAt=stamp-20000,diagnostics={'recognized':False}),self.snapshot(email=None,observedAt=stamp-20000),self.snapshot(email='old@example.com',observedAt=stamp-20000)):
+            with self.subTest(stale=stale['diagnostics']):
+                status,response=self.request('/api/snapshot',{'clientId':'reader-one','snapshot':stale})
+                self.assertEqual(status,200);self.assertFalse(response['accepted'])
+                self.assertIsNone(response['state']['accounts'][0]['error'])
+                self.assertEqual(response['state']['accounts'][0]['snapshot']['balance'],200)
+    def test_claimable_credit_remains_distinct_from_earning_tasks(self):
+        self.register()
+        claim={'id':'pointsclaim','title':'Claimable credit','category':'claim','total':1162,'earned':0,'status':'incomplete'}
+        status,response=self.request('/api/snapshot',{'clientId':'reader-one','snapshot':self.snapshot(activities=[claim])})
+        self.assertEqual(status,200)
+        self.assertEqual(response['state']['accounts'][0]['snapshot']['activities'][0]['category'],'claim')
     def test_commands_are_delivered_once_after_ack(self):
         self.register();self.request('/api/command',{'target':1,'action':'refresh'})
         commands=self.register()[1]['commands'];self.assertEqual(commands[0]['action'],'refresh')

@@ -43,3 +43,17 @@ test('fresh search data augments the dashboard without changing its account, bal
  assert.equal(search.merge(primary,{...reading,date:'2026-10-14'},now).activities.length,1);
  assert.equal(search.merge(primary,{...reading,observedAt:now-180000},now).activities.length,1);
 });
+
+test('a newer verified Bing balance replaces an older dashboard balance without altering daily activities',()=>{
+ const now=Date.parse('2026-10-15T10:00:00Z');
+ const primary={date:'2026-10-15',observedAt:now-60000,account:{email:'alice@example.com'},balance:40590,coverage:{daily:true},activities:[{id:'daily',category:'daily',total:10,earned:0,status:'incomplete'}]};
+ const data=source();data.FlyoutResult.UserStatus.AvailablePoints=40605;
+ const reading={...search.fromData(data),date:'2026-10-15',observedAt:now};
+ const merged=search.merge(primary,reading,now);
+ assert.equal(merged.balance,40605);assert.equal(merged.account,primary.account);assert.deepEqual(merged.activities[0],primary.activities[0]);
+ // An older cached balance cannot undo a more recent dashboard observation.
+ assert.equal(search.merge({...primary,observedAt:now,balance:40610},{...reading,observedAt:now-10000},now).balance,40610);
+ for(const balance of [null,-1,'40605',NaN])assert.equal(search.merge(primary,{...reading,balance},now).balance,40590);
+ assert.equal(search.merge(primary,{...reading,date:'2026-10-14'},now).balance,40590);
+ assert.equal(search.merge(primary,{...reading,status:'account-mismatch'},now).balance,40590);
+});

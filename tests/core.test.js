@@ -9,6 +9,20 @@ test('residuals count offers once and never count account balance',()=>{
  const s=core.summarize(account([todo,{...todo}, {id:'pc',category:'desktop',total:90,earned:30,status:'incomplete'}, {id:'m',category:'mobile',total:60,earned:15,status:'incomplete'}]),now,'Europe/Rome');
  assert.equal(s.remaining,125); assert.equal(s.incomplete,3);
 });
+
+test('already earned claimable credit is shown separately from points still to earn',()=>{
+ const claim={id:'pointsclaim',title:'Punti bonus pronti da richiedere',category:'claim',total:1162,earned:0,status:'incomplete',source:'page'};
+ for(const category of ['claim','extra']){
+  const s=core.summarize(account([todo,{...claim,category}]),now,'Europe/Rome');
+  assert.equal(s.remaining,20);assert.equal(s.claimable,1162);
+  assert.equal(s.groups.claim.length,1);assert.equal(s.groups.extra.length,0);
+  assert.equal(s.actionable.length,1);assert.equal(s.incomplete,1);
+ }
+ const onlyClaim=core.summarize(account([claim]),now,'Europe/Rome');
+ assert.equal(onlyClaim.remaining,0);assert.equal(onlyClaim.claimable,1162);
+ assert.equal(core.reminderAccounts([account([claim])],now,'Europe/Rome').length,0);
+ const stale=core.summarize(account([claim]),now+3600000,'Europe/Rome');assert.equal(stale.claimable,0);
+});
 test('unknown counters remain unknown and make total partial',()=>{
  assert.equal(typeof core.summarize,'function');
  const s=core.summarize(account([{...todo,total:null,earned:null,status:'unknown'}]),now,'Europe/Rome');
@@ -85,6 +99,13 @@ function renderUi(value) {
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../extension/ui/ui.js'),'utf8'),{RewardsCore:core,RewardsDemo:{view:()=>({state})},document:{getElementById:element,body:{classList:{add(){}}},querySelectorAll:()=>[],activeElement:null},location:{search:''},Date:FixedDate,Intl});
  return element('accounts').innerHTML;
 }
+
+test('claimable credit has a dedicated row and is excluded from the daily earning headline',()=>{
+ const html=renderUi(account([todo,{id:'pointsclaim',category:'extra',total:1162,earned:0,status:'incomplete',source:'page'}]));
+ assert.match(html,/data-detail="1-claim"/);assert.match(html,/Punti da riscuotere/);
+ assert.match(html,/già guadagnati/);assert.match(html,/>20<\/strong>/);
+ assert.doesNotMatch(html,/>1[.,]182<\/strong>/);
+});
 test('combined panel renders one shared Bing row with points and retains manual phone tasks',()=>{
  const html=renderUi(combinedAccount([combinedSearch,{...combinedSearch,id:'pc',category:'desktop'},{...combinedSearch,id:'mobile',category:'mobile'}]));
  assert.equal((html.match(/data-detail="1-search"/g)||[]).length,1);assert.match(html,/Ricerche Bing.*PC \+ telefono/);assert.match(html,/20 \/ 60/);
