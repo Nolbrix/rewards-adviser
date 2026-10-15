@@ -20,7 +20,7 @@ except ImportError:
 APP = 'rewards-realtime-adviser'
 PORT = 18743
 DEFAULT_NAMES = ('Account 1', 'Account 2', 'Account 3')
-CATEGORIES = {'daily', 'extra', 'search', 'desktop', 'mobile', 'phone'}
+CATEGORIES = {'daily', 'extra', 'claim', 'search', 'desktop', 'mobile', 'phone'}
 SEARCH_STATUSES = ('ok', 'not-signed-in', 'account-mismatch', 'unavailable', 'identity-unverified')
 PHONE_STATUSES = ('off', 'calibration-needed', 'waiting-phone', 'waiting-idle', 'reading', 'ready', 'interrupted', 'unreadable', 'account-unavailable', 'error')
 PHONE_REASONS = frozenset(('target-unavailable','target-invalid','target-ambiguous','desktop-locked','desktop-busy','input-interrupted','target-changed','target-covered','target-not-foreground','lease-expired','lease-invalid','lease-busy','invalid-coordinate','invalid-key','invalid-scroll','invalid-idle','invalid-timeout','input-failed','capture-failed','platform-unavailable','input-watch-unavailable','input-unavailable','calibration-needed','interrupted','unreadable','account-unavailable','rewards-loading-timeout'))
@@ -157,6 +157,12 @@ class Store:
             if a['error']=='account-change':raise Conflict('Cambio account rilevato: usa Nuova associazione per confermare l’identità.')
             raw=b.get('snapshot')
             if not isinstance(raw,dict):raise ValueError('Lettura non valida')
+            date=text(raw.get('date',''),10)
+            datetime.strptime(date,'%Y-%m-%d')
+            stamp=raw.get('observedAt')
+            if isinstance(stamp,bool) or not isinstance(stamp,(int,float)) or not now-129600000<=stamp<=now+30000:raise ValueError('Data della lettura non valida')
+            previous=a.get('snapshot')
+            if previous and stamp<previous.get('observedAt',0):return {'accepted':False,'state':self.view()}
             raw_account=raw.get('account',{})
             if not isinstance(raw_account,dict):raise ValueError('Identità non valida')
             observed_email=email(raw_account.get('email',''))
@@ -168,10 +174,6 @@ class Store:
             if not isinstance(diagnostic,dict):raise ValueError('Diagnosi non valida')
             if diagnostic.get('recognized') is not True:
                 a['error']='page-unrecognized';return {'accepted':False,'state':self.view()}
-            date=text(raw.get('date',''),10)
-            datetime.strptime(date,'%Y-%m-%d')
-            stamp=raw.get('observedAt')
-            if isinstance(stamp,bool) or not isinstance(stamp,(int,float)) or not now-129600000<=stamp<=now+30000:raise ValueError('Data della lettura non valida')
             activities=raw.get('activities',[])
             if not isinstance(activities,list) or len(activities)>500:raise ValueError('Elenco attività non valido')
             coverage=raw.get('coverage',{})
