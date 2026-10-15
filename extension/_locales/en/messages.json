@@ -175,9 +175,9 @@
     "message": "Local connection key",
     "description": "Chiave locale"
   },
-  "m1add779fcdf4ef46": {
-    "message": "Filled automatically by AVVIA.cmd",
-    "description": "Compilata automaticamente da AVVIA.cmd"
+  "m63adec007963821d": {
+    "message": "Filled automatically by START.cmd",
+    "description": "Compilata automaticamente da START.cmd"
   },
   "m1246dc5c40be2c25": {
     "message": "Account slot",
@@ -679,9 +679,9 @@
     "message": "Connect this profile in settings.",
     "description": "Collega questo profilo nelle impostazioni."
   },
-  "mce5eb25ca8447b15": {
-    "message": "Run AVVIA.cmd in the project folder, then reopen settings: the connection will be filled automatically.",
-    "description": "Avvia AVVIA.cmd nella cartella del progetto, poi riapri le impostazioni: il collegamento verrà compilato automaticamente."
+  "md19966812ae03adf": {
+    "message": "Run START.cmd in the project folder, then reopen settings: the connection will be filled automatically.",
+    "description": "Avvia START.cmd nella cartella del progetto, poi riapri le impostazioni: il collegamento verrà compilato automaticamente."
   },
   "m4fbf2d95be8169ca": {
     "message": "Choose a valid account.",
@@ -990,6 +990,322 @@
   "mf242a7627a78047f": {
     "message": "Incomplete request",
     "description": "Richiesta incompleta"
+  },
+  "m70d3e53005427a47": {
+    "message": "Sign in",
+    "description": "Accedi"
+  },
+  "m0e22fdc1f2d8dc68": {
+    "message": "Your profile",
+    "description": "Il tuo profilo"
+  },
+  "m2fd2ac4f26ad39c2": {
+    "message": "My profile",
+    "description": "Il mio profilo"
+  },
+  "m3cc12bd6a1fdebf4": {
+    "message": "Close profile",
+    "description": "Chiudi profilo"
+  },
+  "m4b6f8f5b114294d6": {
+    "message": "Sign in to back up your connection key, Rewards readers, photo and theme privately. Microsoft sessions stay in their browsers.",
+    "description": "Accedi per salvare chiave, account Rewards, foto e tema nel tuo backup privato. Le sessioni Microsoft restano nei browser."
+  },
+  "m6091043c807621d5": {
+    "message": "Continue with Google",
+    "description": "Continua con Google"
+  },
+  "mbaefafebee369955": {
+    "message": "or",
+    "description": "oppure"
+  },
+  "m29361eec77d0e3b9": {
+    "message": "Register",
+    "description": "Registrati"
+  },
+  "m303559904f572075": {
+    "message": "Sign in with email",
+    "description": "Accedi con email"
+  },
+  "m26472e0be2feb60d": {
+    "message": "Create account",
+    "description": "Crea account"
+  },
+  "mdcbe97cfd1042d64": {
+    "message": "Forgot password?",
+    "description": "Password dimenticata?"
+  },
+  "mcea4eeae38458bc3": {
+    "message": "Use a dedicated Rewards Adviser password with at least 6 characters.",
+    "description": "Usa una password dedicata a Rewards Adviser, con almeno 6 caratteri."
+  },
+  "m60c12ca73de521a7": {
+    "message": "Verify your email to enable private backups.",
+    "description": "Verifica la tua email per attivare il backup privato."
+  },
+  "md95f05883a439417": {
+    "message": "Send verification",
+    "description": "Invia verifica"
+  },
+  "mc3d64d50da4d6f2a": {
+    "message": "I verified my email",
+    "description": "Ho verificato"
+  },
+  "mb6831ba484d85793": {
+    "message": "Display name",
+    "description": "Nome visualizzato"
+  },
+  "mfa6eafe26419d54f": {
+    "message": "Profile photo",
+    "description": "Foto del profilo"
+  },
+  "m47b2891f4695e825": {
+    "message": "JPG, PNG or WebP, up to 2 MB. The photo is resized before saving.",
+    "description": "JPG, PNG o WebP, massimo 2 MB. La foto viene ridotta prima del salvataggio."
+  },
+  "mf5115aa0e57ee012": {
+    "message": "Remove photo",
+    "description": "Rimuovi foto"
+  },
+  "md5df3708bc688543": {
+    "message": "Theme",
+    "description": "Tema"
+  },
+  "mbe284ff59808c39f": {
+    "message": "Blue",
+    "description": "Blu"
+  },
+  "m4b3b853599579fa0": {
+    "message": "Red",
+    "description": "Rosso"
+  },
+  "m28478dc6a693227c": {
+    "message": "Black",
+    "description": "Nero"
+  },
+  "m40598e1cb1d239fd": {
+    "message": "Green",
+    "description": "Verde"
+  },
+  "mcaeda42e92f6e40a": {
+    "message": "Purple",
+    "description": "Viola"
+  },
+  "m182b2b2d88c0b449": {
+    "message": "Save profile",
+    "description": "Salva profilo"
+  },
+  "m7e3dbf03e5b309ee": {
+    "message": "Sign out",
+    "description": "Esci dal profilo"
+  },
+  "m554c61b4a995f63a": {
+    "message": "Your reader backups",
+    "description": "Backup dei tuoi lettori"
+  },
+  "m9442be8e682d8b65": {
+    "message": "Back up this PC’s connection key and up to three Rewards emails. Restore readers on another PC while keeping its new local key.",
+    "description": "Salva la chiave di questo PC e fino a tre email Rewards. Su un altro PC puoi ripristinare i lettori mantenendo una nuova chiave locale."
+  },
+  "m2a97613aa4c3cb06": {
+    "message": "Back up now",
+    "description": "Salva backup ora"
+  },
+  "md37917fe126783a2": {
+    "message": "Restore settings",
+    "description": "Recupera configurazione"
+  },
+  "m87881621f5bd9dc4": {
+    "message": "Sign-in is available in the installed extension.",
+    "description": "Il login è disponibile nell’estensione installata."
+  },
+  "m7f1d4b35cd299918": {
+    "message": "Sign-in is being configured. Your local dashboard remains available.",
+    "description": "Il servizio di accesso è in preparazione. Il riepilogo locale resta disponibile."
+  },
+  "me4eff70a3b134b95": {
+    "message": "Private backup saved.",
+    "description": "Backup privato salvato."
+  },
+  "mad3904c0fe5a3dcf": {
+    "message": "Signed in.",
+    "description": "Accesso completato."
+  },
+  "m222256901cfd1348": {
+    "message": "Enter your email first.",
+    "description": "Inserisci prima la tua email."
+  },
+  "m6872d51c0f5e4e23": {
+    "message": "If an account exists for this email, you will receive password reset instructions.",
+    "description": "Se esiste un account con questa email, riceverai le istruzioni per reimpostare la password."
+  },
+  "m6528b6970b44acfc": {
+    "message": "Verification email sent. Check your inbox.",
+    "description": "Email di verifica inviata. Controlla la tua posta."
+  },
+  "mdd373832b73ca57f": {
+    "message": "Your email has not been verified yet.",
+    "description": "L’email non risulta ancora verificata."
+  },
+  "mbf01cbb5404dcfde": {
+    "message": "Signed out. Your Rewards readers stay connected on this PC.",
+    "description": "Hai effettuato l’uscita. I lettori Rewards restano collegati sul PC."
+  },
+  "meab14c8169fdf9a4": {
+    "message": "Choose a JPG, PNG or WebP photo up to 2 MB.",
+    "description": "Scegli una foto JPG, PNG o WebP entro 2 MB."
+  },
+  "m77937fef58835b89": {
+    "message": "Invalid photo.",
+    "description": "Foto non valida."
+  },
+  "m0f83caab7b726ad6": {
+    "message": "Profile saved in this browser.",
+    "description": "Profilo salvato su questo browser."
+  },
+  "md44eee1bd654888f": {
+    "message": "No backups have been saved yet.",
+    "description": "Non ci sono ancora backup salvati."
+  },
+  "m47471c4fef3aff3c": {
+    "message": "Restore this backup",
+    "description": "Recupera questo backup"
+  },
+  "mc6a0125de9fdd4ca": {
+    "message": "Download private backup",
+    "description": "Scarica backup privato"
+  },
+  "m5572e08f88eee800": {
+    "message": "Backup downloaded: it contains your key and emails. Keep it private.",
+    "description": "Backup scaricato: contiene chiave ed email. Conservalo in privato."
+  },
+  "m68c6e05ae5e85db8": {
+    "message": "Use in this browser profile",
+    "description": "Usa in questo profilo"
+  },
+  "m9deaa9b11edfb22a": {
+    "message": "Theme and photo restored. Choose the reader to use in this browser profile.",
+    "description": "Tema e foto recuperati. Scegli il lettore da usare in questo profilo del browser."
+  },
+  "m4d7be68ccd4ae512": {
+    "message": "Reader restored. Open Rewards and sign in to the matching Microsoft account.",
+    "description": "Lettore recuperato. Apri Rewards e accedi all’account Microsoft corrispondente."
+  },
+  "m380652e8d962ca2f": {
+    "message": "Invalid theme.",
+    "description": "Tema non valido."
+  },
+  "m40d610b33a1caccf": {
+    "message": "Invalid photo. Choose JPG, PNG or WebP.",
+    "description": "Foto non valida. Scegli JPG, PNG o WebP."
+  },
+  "m0c254022996fc2c9": {
+    "message": "Firebase sign-in has not been configured yet.",
+    "description": "Il login Firebase non è ancora configurato."
+  },
+  "m8a6870245e2f7c14": {
+    "message": "An account already exists for this email.",
+    "description": "Esiste già un account con questa email."
+  },
+  "mf861146f871d69b3": {
+    "message": "Incorrect email or password.",
+    "description": "Email o password non corretta."
+  },
+  "mc0b443f99f0810fb": {
+    "message": "Too many attempts. Try again later.",
+    "description": "Troppi tentativi. Riprova più tardi."
+  },
+  "m366a0356d66d954b": {
+    "message": "Account disabled.",
+    "description": "Account disabilitato."
+  },
+  "m3c93278b69740e4b": {
+    "message": "This sign-in method is not enabled yet.",
+    "description": "Questo metodo di accesso non è ancora attivo."
+  },
+  "m9c136d7f684c4904": {
+    "message": "Your session expired. Sign in again.",
+    "description": "Sessione scaduta. Accedi di nuovo."
+  },
+  "m9ba405e80af73fc2": {
+    "message": "Sign-in failed. Try again.",
+    "description": "Accesso non riuscito. Riprova."
+  },
+  "mec73cf3e4a8c1442": {
+    "message": "Invalid sign-in response.",
+    "description": "Risposta di accesso non valida."
+  },
+  "m282222a160abf607": {
+    "message": "Unable to verify this identity.",
+    "description": "Identità non verificabile."
+  },
+  "ma5b7e1aaa71731f9": {
+    "message": "Sign-in cancelled.",
+    "description": "Accesso annullato."
+  },
+  "m67ac3f232b45d9c6": {
+    "message": "Google sign-in has not been configured yet.",
+    "description": "Il login Google non è ancora configurato."
+  },
+  "me72c20c06bbb5aa6": {
+    "message": "Invalid Google sign-in address.",
+    "description": "Indirizzo di accesso Google non valido."
+  },
+  "m970b785b9cb6f585": {
+    "message": "Use this version in an up-to-date Edge, Chrome or Brave browser.",
+    "description": "Apri questa versione in Edge, Chrome o Brave aggiornato."
+  },
+  "m31e4c3b681719ad1": {
+    "message": "Google sign-in was cancelled or is unavailable.",
+    "description": "Accesso Google annullato o non disponibile."
+  },
+  "me8ba4bb7c199c7de": {
+    "message": "Sign in to save your profile.",
+    "description": "Accedi per salvare il tuo profilo."
+  },
+  "m9e6bd7c80bf1ef7d": {
+    "message": "Verify your email before backing up.",
+    "description": "Verifica la tua email prima di salvare il backup."
+  },
+  "mf959fcb52c5a2064": {
+    "message": "Backup unavailable. Check email verification and Firebase rules.",
+    "description": "Backup non disponibile. Controlla verifica email e regole Firebase."
+  },
+  "m5e32e4b14ad1dff8": {
+    "message": "Backup unavailable. Try again.",
+    "description": "Backup non disponibile. Riprova."
+  },
+  "ma44d3122f611dfe5": {
+    "message": "Run START.cmd and connect your readers before backing up.",
+    "description": "Avvia START.cmd e collega i lettori prima di salvare il backup."
+  },
+  "mc6ed0f4add06c69a": {
+    "message": "Invalid backup.",
+    "description": "Backup non valido."
+  },
+  "m63ec9ef83741d13a": {
+    "message": "Invalid backup key.",
+    "description": "Chiave nel backup non valida."
+  },
+  "m8b827e87eb7073f0": {
+    "message": "Sign in to personalize your profile.",
+    "description": "Accedi per personalizzare il profilo."
+  },
+  "m0752f4935a5050ee": {
+    "message": "Sign in before verifying your email.",
+    "description": "Accedi prima di verificare l’email."
+  },
+  "mcca640faaabe9450": {
+    "message": "Wait for the current sign-in to finish.",
+    "description": "Attendi l’accesso in corso."
+  },
+  "m9aad5e9045ad6400": {
+    "message": "Enter a valid email and password (at least 6 characters).",
+    "description": "Inserisci email e password valide (almeno 6 caratteri)."
+  },
+  "m758f4016768ff3c6": {
+    "message": "Unrecognized account operation.",
+    "description": "Operazione account non riconosciuta."
   },
   "extensionName": {
     "message": "Rewards Adviser"
