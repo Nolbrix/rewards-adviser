@@ -19,12 +19,15 @@ def _read(path):
     return token
 
 def _read_stable(path):
-    # The exclusive first writer briefly exposes an empty file. All readers use
-    # the same bounded wait; corrupt keys are never replaced with a new secret.
+    # The first writer can expose an empty file, and Windows can briefly deny
+    # sharing during an atomic replace. Neither condition warrants a new key.
     for attempt in range(20):
         try:return _read(path)
         except json.JSONDecodeError:
             if attempt==19:raise ValueError('Collegamento locale incompleto.') from None
+            time.sleep(.05)
+        except PermissionError:
+            if attempt==19:raise
             time.sleep(.05)
 
 def _create_once(path, token):
