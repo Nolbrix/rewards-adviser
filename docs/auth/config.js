@@ -1,0 +1,2 @@
+export const firebaseConfig={"projectId":"rewards-adviser-a1c40","appId":"1:58525602967:web:b518e6c5e8466d405345d2","storageBucket":"rewards-adviser-a1c40.firebasestorage.app","apiKey":"AIzaSyCTbcP0P5tDGNDEFsVAx0pd3mWGVBBNZhU","authDomain":"rewards-adviser-a1c40.firebaseapp.com","messagingSenderId":"58525602967","projectNumber":"58525602967","version":"2"};
+export const allowedExtensionIds=["cdiapmddbepgmehebjklonkjahbegjkd","fdeliminahnjmiakbfjocmmpmcoakklh","hafieiodkbaohnfpgomiibbldiafhddp"];
