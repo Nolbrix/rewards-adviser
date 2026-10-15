@@ -1,5 +1,6 @@
 """Export curated, generic GitHub source. Never copy a running installation."""
 import argparse
+import json
 import importlib.util
 from pathlib import Path
 import re
@@ -8,7 +9,7 @@ import tempfile
 import zipfile
 
 EXTRA_FILES=(
-    'README.md','.gitignore','package.json','.github/workflows/tests.yml',
+    'docs/auth/index.html','docs/auth/bridge.js','docs/auth/config.js','firestore.rules','firebase.json','docs/AUTH-SETUP.md','tests/account.test.js','tests/account.integration.js','README.md','.gitignore','package.json','.github/workflows/tests.yml',
     'companion/distribution.py','extension/manifest.json','extension/translations.json',
     'tools/build_locales.py','tools/export_public.py',
     'tests/background.test.js','tests/core.test.js',
@@ -37,6 +38,7 @@ def export_source(root,destination):
         with zipfile.ZipFile(archive) as zipped:zipped.extractall(staging)
         for name in EXTRA_FILES:
             target=staging/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(root/name,target)
+        manifest=json.loads((staging/'extension/manifest.json').read_text(encoding='utf-8'));manifest['key']=json.loads((staging/'extension/public-identity.json').read_text(encoding='utf-8'))['key'];(staging/'extension/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
         for path in staging.rglob('*'):
             if not path.is_file() or path.suffix.lower() in ('.png','.jpg','.jpeg'):continue
             source=path.read_text(encoding='utf-8')
