@@ -1288,7 +1288,7 @@
     "description": "Chiave nel backup non valida."
   },
   "m8b827e87eb7073f0": {
-    "message": "Sign in to personalize your profile.",
+    "message": "Sign in to customize your profile.",
     "description": "Accedi per personalizzare il profilo."
   },
   "m0752f4935a5050ee": {
@@ -1334,6 +1334,86 @@
   "m96f174431d68d840": {
     "message": "confirmed phone points<br>Rewards reading needs refreshing",
     "description": "punti telefono confermati<br>lettura Rewards da aggiornare"
+  },
+  "me345a7c41831ad14": {
+    "message": "Customize your profile",
+    "description": "Personalizza il tuo profilo"
+  },
+  "m4fd9b040aedf14bc": {
+    "message": "Sign in and choose your style",
+    "description": "Accedi e scegli il tuo stile"
+  },
+  "m26cf1375618c20d2": {
+    "message": "Your Rewards space",
+    "description": "Il tuo spazio Rewards"
+  },
+  "me6c778a836bbb03d": {
+    "message": "Profile banner",
+    "description": "Banner del profilo"
+  },
+  "m78edb0a14d8fbbae": {
+    "message": "Background",
+    "description": "Sfondo"
+  },
+  "m329631b8f862ca01": {
+    "message": "Match theme",
+    "description": "Come il tema"
+  },
+  "me9de098c7733b1b9": {
+    "message": "Aurora",
+    "description": "Aurora"
+  },
+  "m9a3cca7746b5f28a": {
+    "message": "Sunset",
+    "description": "Tramonto"
+  },
+  "meefb54c3c30daddf": {
+    "message": "Starry night",
+    "description": "Notte stellata"
+  },
+  "mbf9443d7dc4e19c0": {
+    "message": "Custom image",
+    "description": "Immagine personale"
+  },
+  "mcb158e463fe40bfc": {
+    "message": "Upload a banner",
+    "description": "Carica un banner"
+  },
+  "med4979b45f030906": {
+    "message": "JPG, PNG or WebP, up to 6 MB. The image is resized and compressed on your PC.",
+    "description": "JPG, PNG o WebP, massimo 6 MB. L’immagine viene adattata e compressa sul PC."
+  },
+  "m1d1237838ae47ea9": {
+    "message": "Remove banner image",
+    "description": "Rimuovi immagine banner"
+  },
+  "mb81c4d2dd35321b9": {
+    "message": "The badge is decorative and follows your theme; it does not grant special permissions.",
+    "description": "Il badge è decorativo e segue il tema: non assegna permessi speciali."
+  },
+  "mf5fe3c9770ea4b17": {
+    "message": "Confirm article points and other phone activities in the Bing app.",
+    "description": "Conferma nell’app Bing i punti degli articoli e le altre attività del telefono."
+  },
+  "m41ca6e88f9ab47d9": {
+    "message": "Sign in to save your key, Rewards accounts, photo, banner and theme in your private backup. Microsoft sessions stay in the browsers.",
+    "description": "Accedi per salvare chiave, account Rewards, foto, banner e tema nel tuo backup privato. Le sessioni Microsoft restano nei browser."
+  },
+  "m55d21e6457d0cb63": {
+    "message": "Choose a JPG, PNG or WebP banner up to 6 MB.",
+    "description": "Scegli un banner JPG, PNG o WebP entro 6 MB."
+  },
+  "m976beefa719844a5": {
+    "message": "Invalid banner. Choose JPG, PNG or WebP.",
+    "description": "Banner non valido. Scegli JPG, PNG o WebP."
+  },
+  "mf62d9ace95cbe572": {
+    "message": "Choose a valid banner.",
+    "description": "Scegli un banner valido."
+  },
+  "mf54b17b8da5e8ae0": {
+    "message": "Images are too large. Choose a smaller banner.",
+    "description": "Immagini troppo grandi. Scegli un banner più leggero."
   },
   "extensionName": {
     "message": "Rewards Adviser"
