@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const {chromium}=require(path.join(process.env.REWARDS_TEST_PACKAGES||path.join(require('node:os').homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules'),'playwright'));
+const {chromium}=process.env.REWARDS_TEST_PACKAGES?require(path.join(process.env.REWARDS_TEST_PACKAGES,'playwright')):require('playwright');
 const root=path.resolve(__dirname,'..');
 test('the saved modern Rewards HTML is recognized without executing page scripts',{timeout:30000},async()=>{
  const source=process.env.REWARDS_SAVED_HTML||path.join(__dirname,'fixtures','rewards-next-dashboard.html');

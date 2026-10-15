@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),readline=require('node:readline'),{spawn,execFileSync}=require('node:child_process');
-const {chromium}=require(path.join(process.env.REWARDS_TEST_PACKAGES||path.join(require('node:os').homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules'),'playwright'));
+const {chromium}=process.env.REWARDS_TEST_PACKAGES?require(path.join(process.env.REWARDS_TEST_PACKAGES,'playwright')):require('playwright');
 const root=path.resolve(__dirname,'..'),work=path.join(root,'work');
 const relayBase=`http://127.0.0.1:${Number(process.env.REWARDS_TEST_RELAY_PORT||18744)}`;
 test('a clean shared package loads, configures a generic reader and detects its own Rewards account',{timeout:60000},async()=>{

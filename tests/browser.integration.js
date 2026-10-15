@@ -2,8 +2,8 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawn}=require('node:child_process'),readline=require('node:readline');
 const core=require('../extension/core.js');
-const packages=process.env.REWARDS_TEST_PACKAGES||path.join(require('node:os').homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules');
-const {chromium}=require(path.join(packages,'playwright'));
+const packages=process.env.REWARDS_TEST_PACKAGES;
+const {chromium}=packages?require(path.join(packages,'playwright')):require('playwright');
 const root=path.resolve(__dirname,'..'),work=path.join(root,'work');fs.mkdirSync(work,{recursive:true});const artifacts=process.env.REWARDS_TEST_OUTPUTS||path.join(work,'test-artifacts');fs.mkdirSync(artifacts,{recursive:true});
 const relayPort=Number(process.env.REWARDS_TEST_RELAY_PORT||18744),relayBase=`http://127.0.0.1:${relayPort}`;
 test('real MV3 panel and parser sync synthetic progress across three slots and export safe dumps', {timeout:90000},async()=>{
