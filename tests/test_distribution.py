@@ -19,7 +19,7 @@ RUNTIME_FILES = (
     'companion/connection.py', 'extension/background.js', 'extension/content.js',
     'extension/core.js', 'extension/parser.js', 'extension/search.js', 'extension/profiles.js',
     'extension/ui/index.html', 'extension/ui/ui.js', 'extension/ui/ui.css',
-    'extension/ui/demo.js', 'extension/ui/creator.jpg', 'extension/icons/rewards-adviser.svg', 'extension/icons/icon16.png',
+    'extension/ui/demo.js', 'extension/public-identity.json', 'extension/account.js', 'extension/auth-config.json', 'extension/auth-offscreen.html', 'extension/auth-offscreen.js', 'extension/ui/account-ui.js', 'extension/icons/rewards-adviser.svg', 'extension/icons/icon16.png',
     'extension/icons/icon32.png', 'extension/icons/icon48.png',
     'extension/icons/icon128.png', 'companion/server.py', 'companion/launcher.py',
     'companion/phone_native.py', 'companion/phone_vision.py',
@@ -92,7 +92,7 @@ class PublicPackageTests(unittest.TestCase):
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(fake_secret, encoding='utf-8')
         with self.build() as archive:
-            self.assertEqual(set(archive.namelist()), set(RUNTIME_FILES) | {'AVVIA.cmd', 'FERMA.cmd', 'README.html'})
+            self.assertEqual(set(archive.namelist()), set(RUNTIME_FILES) | {'START.cmd', 'STOP.cmd', 'README.html'})
             self.assertTrue(all(not name.startswith('/') and '..' not in PurePosixPath(name).parts for name in archive.namelist()))
             self.assertTrue(all(fake_secret.encode() not in archive.read(name) for name in archive.namelist()))
 
@@ -223,7 +223,7 @@ console.log(JSON.stringify({defaults:[1,2,3,null].map(RewardsCore.defaultAlias),
             "'cwd':str(Path.cwd()),'root':str(Path(__file__).resolve().parents[1]),"
             "'version':list(sys.version_info[:2])}))\n", encoding='utf-8')
         environment = {**os.environ, 'PATH': str(Path(sys.executable).parent)}
-        for command, action in (('AVVIA.cmd', 'start'), ('FERMA.cmd', 'stop')):
+        for command, action in (('START.cmd', 'start'), ('STOP.cmd', 'stop')):
             result = subprocess.run([os.environ.get('COMSPEC', 'cmd.exe'), '/d', '/c', str(spaced / command)],
                                     cwd=self.folder, env=environment, capture_output=True, text=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
