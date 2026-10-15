@@ -49,7 +49,7 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
   async function dashboards(){return (await browser.tabs.query({url:matches})).filter(t=>isRewards(t.url));}
   async function performCommand(command){const tabs=await dashboards();
    if(command.action==='open'){if(tabs.length)await browser.tabs.update(tabs[0].id,{active:true});else await browser.tabs.create({url:REWARDS,active:true});return;}
-   if(command.action==='refresh'){await browser.storage.local.set({searchAttempt:0,searchCache:null});if(tabs.length)await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));else await browser.tabs.create({url:REWARDS,active:false});return;}
+   if(command.action==='refresh'){await browser.storage.local.set({searchAttempt:0,searchCache:null,lastReload:Date.now()});if(tabs.length)await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));else await browser.tabs.create({url:REWARDS,active:false});return;}
    if(command.action==='scan')for(const tab of tabs){try{await browser.tabs.sendMessage(tab.id,{type:'SCAN'});}catch{try{await browser.scripting.executeScript({target:{tabId:tab.id},files:['core.js','parser.js','content.js'].map(file=>prefix+file)});}catch{}}}
   }
   async function tick(force=false){
@@ -147,7 +147,7 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    if(name==='rewards-sync'){
     await account.autoSync().catch(()=>{});
     const c=await config(),{lastReload=0}=await browser.storage.local.get(['lastReload']);
-    if(c.slot&&c.autoRefresh&&Date.now()-lastReload>=120000){await browser.storage.local.set({lastReload:Date.now()});const tabs=await dashboards();await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));}
+    if(c.slot&&c.autoRefresh&&Date.now()-lastReload>=120000)await performCommand({action:'refresh'});
    }
   }
   return {config,saveConfig,api,tick,capture,getView,performCommand,remind,handle,alarm};

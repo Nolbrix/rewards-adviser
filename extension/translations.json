@@ -133,7 +133,7 @@
   "Browser da configurare": "Browser not configured",
   "Email Microsoft da associare": "Microsoft email to link",
   "Saldo": "Balance",
-  "punti mancanti noti": "known points remaining",
+  "punti mancanti noti": "known remaining points",
   "totale parziale": "partial total",
   "Carica l’estensione nel profilo sorgente e scegli questo account nelle impostazioni.": "Load the extension in the source browser profile and choose this account in settings.",
   "Il profilo sorgente non risponde.": "The source profile is not responding.",
@@ -325,5 +325,12 @@
   "Accedi prima di verificare l’email.": "Sign in before verifying your email.",
   "Attendi l’accesso in corso.": "Wait for the current sign-in to finish.",
   "Inserisci email e password valide (almeno 6 caratteri).": "Enter a valid email and password (at least 6 characters).",
-  "Operazione account non riconosciuta.": "Unrecognized account operation."
+  "Operazione account non riconosciuta.": "Unrecognized account operation.",
+  " · da aggiornare": " · refresh needed",
+  "<p class=\"help\">Dati dell’ultima lettura, esclusi dal totale attuale finché Rewards non viene aggiornato.</p>": "<p class=\"help\">Values from the previous reading. They are excluded from the current total until Rewards is refreshed.</p>",
+  "punti confermati a mano<br>lettura Rewards da aggiornare": "manually confirmed points<br>Rewards reading needs refreshing",
+  "totale da aggiornare<br>ultima lettura conservata": "total needs refreshing<br>previous reading retained",
+  "<br>Il profilo sorgente non risponde. Apri il suo browser e lascia Rewards aperto.": "<br>The source profile is not responding. Open its browser and keep Rewards open.",
+  "<br>Il lettore è collegato, ma la lettura Rewards non è aggiornata. Apri Rewards e premi aggiorna.": "<br>The reader is connected, but its Rewards reading is outdated. Open Rewards and refresh.",
+  "punti telefono confermati<br>lettura Rewards da aggiornare": "confirmed phone points<br>Rewards reading needs refreshing"
 }
