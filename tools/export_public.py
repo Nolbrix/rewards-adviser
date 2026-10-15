@@ -38,7 +38,7 @@ def export_source(root,destination):
         for name in EXTRA_FILES:
             target=staging/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(root/name,target)
         for path in staging.rglob('*'):
-            if not path.is_file() or path.suffix=='.png':continue
+            if not path.is_file() or path.suffix.lower() in ('.png','.jpg','.jpeg'):continue
             source=path.read_text(encoding='utf-8')
             if re.search(r'[A-Za-z]:[\\/]Users[\\/]',source):raise ValueError('Percorso personale nei sorgenti: '+path.relative_to(staging).as_posix())
             addresses=re.findall(r'[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',source)
