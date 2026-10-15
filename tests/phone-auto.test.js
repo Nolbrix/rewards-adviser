@@ -91,12 +91,10 @@ test('fresh automatic article UI shows Galaxy progress/time and hides only its m
  const p=await panel({phoneReading:read,manual:[manual,checkin]});
  assert.match(p.html,/Letto dal Galaxy/);assert.match(p.html,/12\s*\/\s*30/);assert.match(p.html,/Check-in/);
  assert.doesNotMatch(p.html,/name="confirmedPoints"/);assert.match(p.html,/data-phone="manual-checkin"/);
- assert.equal(p.element('phone-reader-enabled').checked,true);assert.match(p.element('phone-reader-status').textContent,/automatic|aggiornat|pront/i);
 });
 test('stale automatic UI shows stale source clearly and keeps explicit manual fallback controls',async()=>{
  const p=await panel({phoneReading:{...read,observedAt:now-360000},manual:[manual]}, {enabled:true,status:'waiting-phone',updatedAt:now,slot:null});
  assert.match(p.html,/Galaxy/);assert.match(p.html,/aggiornare|scadut|non aggiornat/i);assert.match(p.html,/name="confirmedPoints"/);
- assert.match(p.element('phone-reader-status').textContent,/telefono|Galaxy/i);
 });
 test('missing and failed automatic UI never labels an unverified counter as freshly read',async()=>{
  const pending=await panel({phoneReading:null,manual:[manual]},{enabled:true,status:'reading',slot:1,updatedAt:now});
@@ -111,9 +109,7 @@ test('manual article aliases expose one fallback editor and only actual user con
  await change('manual-checkin','complete');assert.equal(p.requests.at(-1).activities.find(a=>a.id==='manual-read').confirmNow,undefined);
  await change('manual-read','incomplete');assert.equal(p.requests.at(-1).activities.find(a=>a.id==='manual-read').confirmNow,true);
 });
-test('automatic reader can be paused separately from browser profile configuration',async()=>{
- const p=await panel({phoneReading:read});p.element('phone-reader-enabled').checked=false;
- await p.element('phone-reader-enabled').onchange();
- assert.equal(p.requests.length,1);assert.equal(p.requests[0].type,'PHONE_SETTINGS');assert.equal(p.requests[0].settings.enabled,false);
- const source=fs.readFileSync(path.join(__dirname,'../extension/ui/index.html'),'utf8');assert.match(source,/id="phone-reader-enabled"/);assert.match(source,/id="phone-reader-status"/);
+test('the removed Galaxy section no longer exposes automatic reader controls',async()=>{
+ const p=await panel({phoneReading:read});assert.equal(p.element('phone-reader-enabled').onchange,undefined);assert.equal(p.requests.length,0);
+ const source=fs.readFileSync(path.join(__dirname,'../extension/ui/index.html'),'utf8');assert.doesNotMatch(source,/id="phone-reader-enabled"|id="phone-reader-status"|Articoli Bing dal Galaxy/);
 });

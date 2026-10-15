@@ -8,6 +8,23 @@ function setup(respond,backupProvider=null){
 }
 const credential={idToken:'firebase-id-token',refreshToken:'private-refresh-token',expiresIn:'3600',localId:'alice'};
 const alice={localId:'alice',email:'alice@example.com',emailVerified:true,displayName:'Alice'};
+test('profile banners retain only bounded local raster images and supported visual presets',()=>{
+ const profile=accounts.cleanProfile({theme:'red',name:'Alice',banner:'data:image/jpeg;base64,YQ==',bannerStyle:'image',role:'DEV'});
+ assert.equal(profile.banner,'data:image/jpeg;base64,YQ==');assert.equal(profile.bannerStyle,'image');assert.equal(profile.role,undefined);
+ assert.equal(accounts.cleanProfile({theme:'blue'}).bannerStyle,'theme');assert.equal(accounts.cleanProfile({theme:'blue'}).banner,'');
+ for(const raw of [{banner:'https://example.com/banner.jpg'},{banner:'data:image/svg+xml;base64,PHN2Zz4='},{bannerStyle:'arbitrary-css'},{bannerStyle:'image'},{photo:'data:image/jpeg;base64,'+'A'.repeat(150000),banner:'data:image/jpeg;base64,'+'A'.repeat(100000)}])assert.throws(()=>accounts.cleanProfile(raw));
+});
+test('theme badges are decorative and derived from the selected theme',()=>{
+ assert.equal(typeof accounts.themeRole,'function');for(const [theme,role] of Object.entries({red:'MYTHIC',blue:'ASTRAL',black:'ECLIPSE',green:'EMERALD',purple:'ARCANE'}))assert.equal(accounts.themeRole(theme),role);
+ for(const value of ['unknown','toString','__proto__'])assert.equal(accounts.themeRole(value),'ASTRAL');
+});
+test('banner artwork is included in the private backup and stays within the deployed payload limit',async()=>{
+ const t=setup(url=>url.includes('lookup')?{users:[alice]}:credential,async()=>({token:'a'.repeat(48),readers:[{slot:1,email:'reader@example.com',alias:'Reader',browser:'Edge'}]}));
+ await t.app.handle({type:'AUTH_SIGNIN',email:alice.email,password:'password'});const profile={theme:'red',photo:'data:image/jpeg;base64,'+'A'.repeat(170000),banner:'data:image/jpeg;base64,'+'A'.repeat(55000),bannerStyle:'image'};
+ const saved=await t.app.handle({type:'AUTH_PROFILE',profile});assert.equal(saved.profile.banner,profile.banner);await t.app.handle({type:'AUTH_CLOUD_SAVE'});
+ const patch=t.calls.find(c=>c.options?.method==='PATCH'),payload=JSON.parse(patch.options.body).fields.payload.stringValue;assert.ok(Buffer.byteLength(payload,'utf8')<250000);assert.equal(JSON.parse(payload).profile.bannerStyle,'image');assert.ok(!payload.includes('private-refresh-token'));
+ await t.app.handle({type:'AUTH_SIGNOUT'});const signed=await t.app.handle({type:'AUTH_SIGNIN',email:alice.email,password:'password'});assert.equal(signed.profile.banner,profile.banner);
+});
 test('email sign-in verifies the Firebase token and never exposes credentials to the UI',async()=>{
  const t=setup(url=>url.includes('accounts:lookup')?{users:[alice]}:credential);
  const view=await t.app.handle({type:'AUTH_SIGNIN',email:'alice@example.com',password:'not-saved-password'});

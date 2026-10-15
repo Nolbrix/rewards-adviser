@@ -110,6 +110,8 @@ class PublicPackageTests(unittest.TestCase):
             popup = manifest['action']['default_popup']
             html = archive.read(popup).decode('utf-8')
             for reference in re.findall(r'(?:src|href)="([^"]+)"', html):
+                if reference.startswith(('https://', 'http://', '#')):
+                    continue
                 target = str(PurePosixPath(popup).parent / reference)
                 normalized = os.path.normpath(target).replace('\\', '/')
                 self.assertIn(normalized, archive.namelist())
@@ -199,7 +201,7 @@ console.log(JSON.stringify({defaults:[1,2,3,null].map(RewardsCore.defaultAlias),
             self.assertTrue((friend / 'companion' / name).is_file(), name)
         self.assertFalse((friend / '.state/phone-reader').exists())
         guide = (friend / 'README.html').read_text(encoding='utf-8').casefold()
-        for required in ('calibrazione privata', '120 secondi', '15 secondi', 'lettura automatica', 'sbloccato'):
+        for required in ('conferma manuale', '0 a 30', 'banner', 'mythic'):
             self.assertIn(required, guide)
         self.assertNotIn('non trasferisce automaticamente il contatore', guide)
 
