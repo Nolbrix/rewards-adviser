@@ -34,9 +34,18 @@
  $('recheck-email').onclick=()=>run(async()=>{render(await send('AUTH_RECHECK'));if(current.user?.verified)await initializeCloud();else feedback(tr('L’email non risulta ancora verificata.'));});
  $('account-signout').onclick=()=>run(async()=>{render(await send('AUTH_SIGNOUT'));$('cloud-backups').replaceChildren();backups=[];restored=[];feedback(tr('Hai effettuato l’uscita. I lettori Rewards restano collegati sul PC.'));});
  async function raster(file,isBanner){
-  if(!file)return null;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>(isBanner?6:2)*1024*1024)throw Error(tr(isBanner?'Scegli un banner JPG, PNG o WebP entro 6 MB.':'Scegli una foto JPG, PNG o WebP entro 2 MB.'));
-  const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();if(!image.naturalWidth||!image.naturalHeight)throw Error(tr('Foto non valida.'));
-   const ratio=isBanner?4:1,sw=Math.min(image.naturalWidth,image.naturalHeight*ratio),sh=sw/ratio;let width=isBanner?960:160;const budget=isBanner?Math.min(160000,230000-photo.length):Math.min(180000,230000-banner.length);
+  if(!file)return null;const gif=file.type==='image/gif',budget=RewardsAccount.profileImageBudget(isBanner,isBanner?photo:banner);
+  if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)||!gif&&file.size>(isBanner?6:2)*1024*1024)throw Error(tr(isBanner?'Scegli un banner JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 6 MB.':'Scegli una foto JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 2 MB.'));
+  let original='';if(gif){
+   const byteBudget=Math.max(0,Math.floor((budget-22)/4)*3),kb=Math.floor(byteBudget/1024*10)/10;
+   const tooLarge=()=>Error(tr('La GIF supera lo spazio disponibile ({kb} KB). Scegli una GIF più leggera.').replace('{kb}',String(kb)));
+   if(file.size>byteBudget)throw tooLarge();
+   original=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error(tr('GIF non valida. Scegli un altro file.')));reader.readAsDataURL(file);});
+   if(original.length>budget)throw tooLarge();try{RewardsAccount.cleanProfile({photo:isBanner?photo:original,banner:isBanner?original:banner});}catch{throw Error(tr('GIF non valida. Scegli un altro file.'));}
+  }
+  const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;try{await image.decode();}catch(e){if(gif)throw Error(tr('GIF non valida. Scegli un altro file.'));throw e;}if(!image.naturalWidth||!image.naturalHeight)throw Error(tr(gif?'GIF non valida. Scegli un altro file.':'Foto non valida.'));
+   if(gif)return original;
+   const ratio=isBanner?4:1,sw=Math.min(image.naturalWidth,image.naturalHeight*ratio),sh=sw/ratio;let width=isBanner?960:160;
    while(width>=(isBanner?320:80)){const canvas=document.createElement('canvas');canvas.width=width;canvas.height=Math.round(width/ratio);canvas.getContext('2d').drawImage(image,(image.naturalWidth-sw)/2,(image.naturalHeight-sh)/2,sw,sh,0,0,canvas.width,canvas.height);
     for(const quality of [.86,.72,.58,.44]){const value=canvas.toDataURL('image/jpeg',quality);if(value.length<=budget)return value;}width=Math.floor(width*.75);
    }throw Error(tr('Immagini troppo grandi. Scegli un banner più leggero.'));

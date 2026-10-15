@@ -64,3 +64,122 @@ body[data-theme="black"] .role-badge{background:linear-gradient(110deg,#4b4e5a,#
 @media(min-width:950px){.expanded .profile-strip{min-height:122px;padding:20px 25px}.expanded .strip-avatar{width:72px;height:72px}.expanded #strip-name{font-size:25px}.expanded .strip-eyebrow{font-size:9px}.expanded #strip-hint{font-size:11px}.expanded .role-badge{font-size:10px}}
 @media(max-width:620px){.profile-strip{width:calc(100% - 28px);margin:12px 14px 0;min-height:98px;padding:15px 13px;gap:10px}.strip-avatar{width:53px;height:53px}#strip-name{font-size:19px}.strip-edit{display:none}.strip-watermark{right:30px;font-size:125px}.strip-name-row{gap:6px}.profile-preview{padding:16px 12px;gap:9px}}
 @media(prefers-reduced-motion:reduce){.profile-strip,.creator-credit,.credit-spark{transition:none}.creator-credit:after{display:none}.creator-credit:hover .credit-spark,.creator-credit:focus-visible .credit-spark{transform:none}}
+
+/* Theme-lit avatar frames: the photograph stays still inside the moving aura. */
+:root{
+  --frame-core:#effaff;
+  --frame-light:color-mix(in srgb,var(--accent) 64%,#d5f7ff);
+  --frame-energy:color-mix(in srgb,var(--accent) 76%,#62ceff);
+  --frame-shade:color-mix(in srgb,var(--hero-a) 65%,#071829);
+}
+body[data-theme="red"]{
+  --frame-core:#fff0d4;
+  --frame-light:color-mix(in srgb,var(--accent) 32%,#ffbc7d);
+  --frame-energy:color-mix(in srgb,var(--accent) 38%,#ff653b);
+  --frame-shade:color-mix(in srgb,var(--hero-a) 75%,#500d15);
+}
+body[data-theme="black"]{
+  --frame-core:#fff;
+  --frame-light:color-mix(in srgb,var(--accent) 72%,#fff);
+  --frame-energy:color-mix(in srgb,var(--accent) 80%,#8291a8);
+  --frame-shade:color-mix(in srgb,var(--hero-a) 70%,#080a10);
+}
+body[data-theme="green"]{
+  --frame-core:#e8fff4;
+  --frame-light:color-mix(in srgb,var(--accent) 65%,#c3ffd2);
+  --frame-energy:color-mix(in srgb,var(--accent) 65%,#20dba0);
+  --frame-shade:color-mix(in srgb,var(--hero-a) 70%,#043125);
+}
+body[data-theme="purple"]{
+  --frame-core:#fff1ff;
+  --frame-light:color-mix(in srgb,var(--accent) 66%,#f4d1ff);
+  --frame-energy:color-mix(in srgb,var(--accent) 70%,#a967ff);
+  --frame-shade:color-mix(in srgb,var(--hero-a) 70%,#250c47);
+}
+.avatar-frame{
+  --frame-orbit-inset:-3px;
+  --frame-orbit-width:1.6px;
+  --frame-spark-inset:-7px;
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+  display:grid;
+  place-items:center;
+  flex:none;
+  padding:4px;
+  border:0;
+  border-radius:50%;
+  background:linear-gradient(145deg,var(--frame-core) 0%,var(--frame-energy) 19%,var(--frame-shade) 43%,var(--frame-light) 70%,var(--frame-shade) 94%);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--frame-core) 38%,transparent),0 0 0 1px var(--frame-shade),0 0 12px color-mix(in srgb,var(--frame-energy) 24%,transparent),0 0 25px var(--glow);
+  transition:box-shadow .25s ease;
+}
+.avatar-frame>img,.avatar-frame>span{
+  position:relative;
+  z-index:1;
+  grid-area:1/1;
+  width:100%;
+  height:100%;
+  min-width:0;
+  min-height:0;
+  border-radius:50%;
+}
+.avatar-frame>img{
+  display:block;
+  object-fit:cover;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--frame-shade) 85%,transparent);
+}
+.avatar-frame>span{
+  display:grid;
+  place-items:center;
+  background:var(--hero-a);
+  color:var(--frame-light);
+}
+.avatar-frame:before,.avatar-frame:after{
+  content:'';
+  position:absolute;
+  z-index:2;
+  border-radius:50%;
+  pointer-events:none;
+  transform-origin:center;
+}
+.avatar-frame:before{
+  inset:var(--frame-orbit-inset);
+  padding:var(--frame-orbit-width);
+  background:conic-gradient(from 12deg,transparent 0deg 13deg,var(--frame-energy) 24deg,var(--frame-core) 29deg,transparent 39deg 89deg,var(--frame-light) 99deg,transparent 116deg 161deg,var(--frame-energy) 175deg,var(--frame-core) 180deg,transparent 194deg 249deg,var(--frame-energy) 261deg,transparent 281deg 319deg,var(--frame-light) 332deg,transparent 348deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  filter:drop-shadow(0 0 3px color-mix(in srgb,var(--frame-energy) 78%,transparent));
+  animation:avatar-aura-orbit 12s linear infinite;
+}
+.avatar-frame:after{
+  inset:var(--frame-spark-inset);
+  background:radial-gradient(circle,var(--frame-core) 0 .7px,var(--frame-energy) 1px,transparent 2px) 77% 4%/5px 5px no-repeat,radial-gradient(ellipse,var(--frame-core) 0 .5px,var(--frame-energy) 1px,transparent 2.2px) 4% 66%/6px 4px no-repeat,radial-gradient(circle,var(--frame-light) 0 .6px,transparent 1.6px) 67% 98%/4px 4px no-repeat,radial-gradient(circle,var(--frame-light) 0 .5px,transparent 1.4px) 97% 40%/3px 3px no-repeat;
+  filter:drop-shadow(0 0 3px var(--frame-energy));
+  opacity:.85;
+  animation:avatar-aura-orbit 14s linear infinite reverse;
+  transition:opacity .25s ease;
+}
+.profile-strip:hover .avatar-frame,.profile-strip:focus-visible .avatar-frame,.account-open:hover .avatar-frame,.account-open:focus-visible .avatar-frame{
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--frame-core) 50%,transparent),0 0 0 1px var(--frame-shade),0 0 15px color-mix(in srgb,var(--frame-energy) 38%,transparent),0 0 28px var(--glow);
+}
+.profile-strip:hover .avatar-frame:after,.profile-strip:focus-visible .avatar-frame:after,.account-open:hover .avatar-frame:after,.account-open:focus-visible .avatar-frame:after{opacity:1}
+.header-avatar.avatar-frame{
+  --frame-orbit-inset:-2px;
+  --frame-orbit-width:1px;
+  --frame-spark-inset:-4px;
+  width:24px;
+  height:24px;
+  padding:2px;
+  font-size:12px;
+  line-height:1;
+  letter-spacing:0;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--frame-core) 30%,transparent),0 0 8px var(--glow);
+}
+.header-avatar.avatar-frame>img{width:100%;height:100%;box-shadow:none}
+.header-avatar.avatar-frame:after{background-size:3px 3px,4px 3px,2px 2px,2px 2px;opacity:.7}
+.account-open .header-avatar{overflow:visible;white-space:normal}
+.account-open .header-avatar+span{position:relative;z-index:1;min-width:0}
+@keyframes avatar-aura-orbit{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.avatar-frame,.avatar-frame:after{transition:none}.avatar-frame:before,.avatar-frame:after{animation:none}}
