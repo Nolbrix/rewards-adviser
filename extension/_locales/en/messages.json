@@ -536,7 +536,7 @@
     "description": "Saldo"
   },
   "m77c215f147bd8933": {
-    "message": "known points remaining",
+    "message": "known remaining points",
     "description": "punti mancanti noti"
   },
   "m3bc4d19af778e3c3": {
@@ -1306,6 +1306,34 @@
   "m758f4016768ff3c6": {
     "message": "Unrecognized account operation.",
     "description": "Operazione account non riconosciuta."
+  },
+  "mee965d20bc5c1472": {
+    "message": " · refresh needed",
+    "description": " · da aggiornare"
+  },
+  "m95ff16322d7f0099": {
+    "message": "<p class=\"help\">Values from the previous reading. They are excluded from the current total until Rewards is refreshed.</p>",
+    "description": "<p class=\"help\">Dati dell’ultima lettura, esclusi dal totale attuale finché Rewards non viene aggiornato.</p>"
+  },
+  "m44909d04628b711d": {
+    "message": "manually confirmed points<br>Rewards reading needs refreshing",
+    "description": "punti confermati a mano<br>lettura Rewards da aggiornare"
+  },
+  "m52dbe97403c46ae9": {
+    "message": "total needs refreshing<br>previous reading retained",
+    "description": "totale da aggiornare<br>ultima lettura conservata"
+  },
+  "m2df73b9f0eca3adf": {
+    "message": "<br>The source profile is not responding. Open its browser and keep Rewards open.",
+    "description": "<br>Il profilo sorgente non risponde. Apri il suo browser e lascia Rewards aperto."
+  },
+  "m7805bd45b4836b95": {
+    "message": "<br>The reader is connected, but its Rewards reading is outdated. Open Rewards and refresh.",
+    "description": "<br>Il lettore è collegato, ma la lettura Rewards non è aggiornata. Apri Rewards e premi aggiorna."
+  },
+  "m96f174431d68d840": {
+    "message": "confirmed phone points<br>Rewards reading needs refreshing",
+    "description": "punti telefono confermati<br>lettura Rewards da aggiornare"
   },
   "extensionName": {
     "message": "Rewards Adviser"
