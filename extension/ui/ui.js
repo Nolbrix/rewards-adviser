@@ -4,7 +4,7 @@
  const core=RewardsCore,demo=!globalThis.chrome?.runtime?.id,$=id=>document.getElementById(id);
  let view=demo?RewardsDemo.view():{state:null,config:null,connection:null},renderKey='',busy=false;
  const fmt=n=>new Intl.NumberFormat(locale).format(n),esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const labels={daily:tr('Set giornaliero'),extra:tr('Extra e bonus'),search:tr('Ricerche Bing · PC + telefono'),desktop:tr('Ricerche PC'),mobile:tr('Ricerche telefono'),phone:tr('Bing sul telefono')};
+ const labels={daily:tr('Set giornaliero'),extra:tr('Extra e bonus'),claim:tr('Punti da riscuotere'),search:tr('Ricerche Bing · PC + telefono'),desktop:tr('Ricerche PC'),mobile:tr('Ricerche telefono'),phone:tr('Bing sul telefono')};
  const searchHelp={
   'not-signed-in':tr('Apri Bing nello stesso profilo sorgente e accedi all’account Microsoft associato, poi aggiorna Rewards.'),
   'account-mismatch':tr('Bing mostra un altro account. Apri Bing nello stesso profilo sorgente, verifica l’account Microsoft associato e aggiorna Rewards.'),
@@ -33,6 +33,7 @@
   let label=tr('Non rilevato');
   if(kind==='daily')label=items.length?tr`${items.filter(a=>a.status==='complete').length}/${items.length} fatte`:coverage?.daily?tr('Nessuna attività'):tr('Non rilevato');
   if(kind==='extra')label=items.length?tr`${items.filter(a=>a.status==='incomplete').length} da fare${items.some(a=>a.status==='unknown')?' · ?':''}`:coverage?.extra?tr('Nessun extra'):tr('Non rilevato');
+  if(kind==='claim')label=items.length&&items.every(a=>a.remaining!==null)?fmt(items.reduce((n,a)=>n+(a.status==='incomplete'?a.remaining:0),0))+' pt':tr('Non rilevato');
   if(searchKind){const a=items[0];if(a)label=a.total!==null&&a.earned!==null?tr`${fmt(a.earned)} / ${fmt(a.total)}`:tr('Punti non disponibili');}
   const phone=kind==='phone'?core.phoneObservation(phoneContext(account),Date.now(),view.state?.settings?.timezone):null;
   if(kind==='phone')label=phone.active?tr`${fmt(phone.item.earned)} / 30 · Galaxy`:phone.present?tr('Letture da aggiornare'):phone.required?tr('Articoli da verificare'):tr('Conferma manuale');
@@ -57,11 +58,12 @@
    content=tr`<div class="progress-track" aria-hidden="true"><div class="progress-fill" style="width:${Math.min(100,Math.max(0,percent))}%"></div></div><ul class="task-list">`+items.map(a=>tr`<li class="task"><span class="task-state ${a.status}" title="${a.status==='complete'?tr('Completata'):a.status==='incomplete'?tr('Da completare'):tr('Non verificabile')}">${a.status==='complete'?'✓':a.status==='incomplete'?'○':'?'}</span><span class="task-title">${esc(a.title)}</span><span class="task-points">${a.status==='complete'?tr('Fatto'):a.remaining!==null?fmt(a.remaining)+' pt':'? pt'}</span></li>`).join('')+'</ul>';
    if(searchKind&&items.some(a=>a.total===null||a.earned===null))content+=tr`<p class="help">${missingSearchHelp}</p>`;
   }else content='<p class="help">'+(searchKind?missingSearchHelp:coverage?.[kind]?tr('Microsoft non mostra attività in questa categoria.'):tr('Apri e aggiorna Rewards nel profilo sorgente. I dati mancanti restano sconosciuti.'))+'</p>';
+  if(kind==='claim')content=tr('<p class="help">Punti già guadagnati, ancora da riscuotere su Rewards. Non si sommano ai punti da completare oggi.</p>')+content;
   if(kind!=='phone'&&account.snapshot&&(!summary.fresh||account.error)&&(items.length||coverage?.[kind])){label+=tr(' · da aggiornare');content=tr('<p class="help">Dati dell’ultima lettura, esclusi dal totale attuale finché Rewards non viene aggiornato.</p>')+content;}
   const key=tr`${account.slot}-${kind}`;return tr`<details class="category" data-detail="${key}" ${opened.has(key)?'open':''}><summary><span class="category-title">${labels[kind]}</span><span class="category-total">${label}</span></summary>${content}</details>`;
  }
  function card(account,opened){const s=accountSummary(account),snapshot=account.snapshot;
-  const categories=core.CATEGORIES.filter(kind=>snapshot?.searchMode==='combined'?!['desktop','mobile'].includes(kind):kind!=='search');
+  const categories=core.CATEGORIES.filter(kind=>(kind!=='claim'||s.groups.claim.length>0)&&(snapshot?.searchMode==='combined'?!['desktop','mobile'].includes(kind):kind!=='search'));
   const connected=!!account.clientId,status=account.error?tr('Da controllare'):!snapshot?tr('In attesa'):!s.current?tr('Giorno precedente'):s.stale?tr('Da aggiornare'):s.completed?tr('Rilevate complete'):s.partial?tr('Dati parziali'):tr('Da completare');
   const tone=!snapshot?'off':account.error||s.stale||s.partial?'warn':'';
   const age=snapshot?Math.max(0,Math.floor((Date.now()-snapshot.observedAt)/60000)):null;
