@@ -26,17 +26,17 @@ def main():
     store=Store(ROOT/'.state',device_dir=device_directory())
     if args.action=='stop':
         try:request('/api/shutdown',store.token,{})
-        except (OSError,urllib.error.URLError):print('Servizio già fermo.');return
-        print('Collegamento locale fermato.');return
+        except (OSError,urllib.error.URLError):print('Local service is already stopped.');return
+        print('Local connection stopped.');return
     if args.action=='status':
-        try:request('/api/state',store.token);print('Collegamento locale attivo.');return
-        except (OSError,urllib.error.URLError):print('Collegamento locale fermo.');sys.exit(1)
+        try:request('/api/state',store.token);print('Local connection is running.');return
+        except (OSError,urllib.error.URLError):print('Local connection is stopped.');sys.exit(1)
     write_local_link(ROOT,store.token)
     pairing=ROOT/'ABBINAMENTO-LOCALE.txt'
-    pairing.write_text('REWARDS ADVISER\n\nChiave locale personale:\n\n'+store.token+'\n\nQuesta chiave resta sul tuo PC. Non condividerla.\n\n1. Carica la cartella principale che contiene manifest.json in ciascun profilo del browser.\n2. Scegli Lettore 1, 2 o 3 per i tuoi account oppure Pannello.\n3. Salva e collega, quindi apri Rewards in ogni lettore.\n4. Lascia un solo coordinatore dei promemoria attivo.\n\nGuida: README.html\n',encoding='utf-8')
+    pairing.write_text('REWARDS ADVISER\n\nPrivate local connection key:\n\n'+store.token+'\n\nThis key stays on your PC. Keep it private.\n\n1. Load the root folder containing manifest.json in each browser profile.\n2. Choose Reader 1, 2 or 3 for your accounts, or Dashboard.\n3. Save and connect, then open Rewards in every reader.\n4. Keep only one reminder coordinator enabled.\n\nGuide: README.html\n',encoding='utf-8')
     try:request('/api/state',store.token)
     except urllib.error.HTTPError:
-        raise RuntimeError('La porta locale è occupata da un servizio con un\'altra chiave. Ferma la copia precedente prima di avviare questa.')
+        raise RuntimeError('The local port is used by a service with a different key. Stop the previous copy before starting this one.')
     except (OSError,urllib.error.URLError):
         executable=Path(sys.executable).with_name('pythonw.exe')
         if not executable.exists():executable=Path(sys.executable)
@@ -46,9 +46,9 @@ def main():
             time.sleep(.15)
             try:request('/api/state',store.token);break
             except (OSError,urllib.error.URLError):continue
-        else:raise RuntimeError('Impossibile avviare il collegamento locale sulla porta '+str(PORT))
-    print('Collegamento locale attivo e configurazione automatica pronta. Guida: README.html')
+        else:raise RuntimeError('Unable to start the local connection on port '+str(PORT))
+    print('Local connection is running and automatic setup is ready. Guide: README.html')
 
 if __name__=='__main__':
     try:main()
-    except Exception as error:print('Errore:',error);sys.exit(1)
+    except Exception as error:print('Error:',error);sys.exit(1)
