@@ -3,11 +3,37 @@
  const THEMES=['blue','red','black','green','purple'];
  const ROLES=Object.freeze({blue:'ASTRAL',red:'MYTHIC',black:'ECLIPSE',green:'EMERALD',purple:'ARCANE'});
  const themeRole=theme=>Object.hasOwn(ROLES,theme)?ROLES[theme]:ROLES.blue;
+ const profileImageBudget=(isBanner,otherImage='')=>Math.max(0,Math.min(isBanner?160000:180000,230000-otherImage.length));
+ function validGif(value){
+  let bytes;try{bytes=atob(value.slice(22));}catch{return false;}
+  const byte=offset=>bytes.charCodeAt(offset),word=offset=>byte(offset)+(byte(offset+1)<<8);
+  if(!/^GIF8[79]a/.test(bytes)||bytes.length<14)return false;
+  const screenWidth=word(6),screenHeight=word(8);
+  if(!screenWidth||!screenHeight||screenWidth>4096||screenHeight>4096||screenWidth*screenHeight>4194304)return false;
+  let position=13,frames=0;if(byte(10)&128)position+=3*(1<<((byte(10)&7)+1));
+  function blocks(requireData=false){let data=false;while(position<bytes.length){const length=byte(position++);if(!length)return !requireData||data;position+=length;if(position>bytes.length)return false;data=true;}return false;}
+  while(position<bytes.length){
+   const marker=byte(position++);if(marker===0x3b)return frames>0&&position===bytes.length;
+   if(marker===0x21){
+    if(position>=bytes.length)return false;const label=byte(position++);
+    if(label===0xf9){if(position+6>bytes.length||byte(position)!==4||byte(position+5)!==0)return false;position+=6;}
+    else if(!blocks())return false;
+   }
+   else if(marker===0x2c){
+    if(position+9>bytes.length)return false;
+    const width=word(position+4),height=word(position+6);
+    if(!width||!height||word(position)+width>screenWidth||word(position+2)+height>screenHeight)return false;
+    const packed=byte(position+8);position+=9;if(packed&128)position+=3*(1<<((packed&7)+1));
+    if(position>=bytes.length||byte(position)<2||byte(position)>8)return false;position++;if(!blocks(true))return false;frames++;
+   }else return false;
+  }return false;
+ }
+ function validProfileImage(value,limit){return typeof value==='string'&&value.length<=limit&&(!value||/^data:image\/(?:jpeg|png|webp|gif);base64,[A-Za-z0-9+/]+=*$/.test(value)&&(!value.startsWith('data:image/gif;')||validGif(value)));}
  function cleanProfile(raw={}){
   const theme=raw.theme||'blue',name=String(raw.name||'').trim().slice(0,60),photo=raw.photo||'',banner=raw.banner||'',bannerStyle=raw.bannerStyle||(banner?'image':'theme');
   if(!THEMES.includes(theme))throw Error('Tema non valido.');
-  if(typeof photo!=='string'||photo.length>180000||photo&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(photo))throw Error('Foto non valida. Scegli JPG, PNG o WebP.');
-  if(typeof banner!=='string'||banner.length>160000||banner&&!/^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(banner))throw Error('Banner non valido. Scegli JPG, PNG o WebP.');
+  if(!validProfileImage(photo,180000))throw Error('Foto non valida. Scegli JPG, PNG, WebP o GIF.');
+  if(!validProfileImage(banner,160000))throw Error('Banner non valido. Scegli JPG, PNG, WebP o GIF.');
   if(!['theme','aurora','sunset','midnight','image'].includes(bannerStyle)||bannerStyle==='image'&&!banner)throw Error('Scegli un banner valido.');
   if(photo.length+banner.length>230000)throw Error('Immagini troppo grandi. Scegli un banner più leggero.');
   return {theme,name,photo,banner,bannerStyle};
@@ -137,5 +163,5 @@
   async function autoSync(){const {accountSession:s,accountCloudReady:ready}=await storage.get(['accountSession','accountCloudReady']);if(s?.verified&&ready?.uid===s.uid&&ready.stamp===s.stamp)await saveCloud();}
   return {handle,saveCloud,autoSync};
  }
- return {createAccount,cleanProfile,THEMES,themeRole};
+ return {createAccount,cleanProfile,THEMES,themeRole,profileImageBudget};
 });
