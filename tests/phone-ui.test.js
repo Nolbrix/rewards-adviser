@@ -6,11 +6,11 @@ const now=Date.parse('2026-10-15T10:00:00Z'),today='2026-10-15';
 const checkin={id:'manual-checkin',title:'Check-in Bing',category:'phone',total:5,earned:0,status:'incomplete',source:'manual',date:today};
 const reading={id:'manual-read',title:'Letture articoli Bing',category:'phone',total:30,earned:12,status:'incomplete',source:'manual',date:today};
 
-async function panel(manual=[]) {
+async function panel(manual=[],accountExtra={}) {
  const elements=new Map(),requests=[];
  const element=id=>{if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'',classList:{add(){}},contains(){return false;}});return elements.get(id);};
  class FixedDate extends Date {static now(){return now;}}
- const state={accounts:[{slot:1,clientId:'reader-one',manual}],settings:{timezone:'Europe/Rome'}};
+ const state={accounts:[{slot:1,clientId:'reader-one',manual,...accountExtra}],settings:{timezone:'Europe/Rome'}};
  const chrome={runtime:{id:'test-extension',async sendMessage(message){
   if(message.type==='GET')return {ok:true,data:{state,config:{},connection:{online:true}}};
   requests.push(JSON.parse(JSON.stringify(message)));
@@ -33,6 +33,12 @@ test('article reading starts unknown with a dedicated manual app-only 30 point c
  assert.match(p.html,/name="confirmedPoints"[^>]*min="0"[^>]*max="30"/);
  assert.match(p.html,/name="confirmedPoints"[^>]*value=""/);assert.match(p.html,/>Salva<\/button>/);
  assert.match(p.html,/Check-in Bing/);assert.equal(p.requests.length,0);
+});
+test('stale browser counters are labeled as historical and cannot look like current remaining points',async()=>{
+ const snapshot={date:today,observedAt:now-2*3600000,balance:100,coverage:{daily:true,search:true},activities:[{id:'pc',category:'desktop',total:60,earned:0,status:'incomplete',source:'page'}]};
+ const p=await panel([],{snapshot,lastSeen:now});assert.match(p.html,/0 \/ 60 · da aggiornare/);assert.match(p.html,/totale da aggiornare/);assert.match(p.html,/Il lettore è collegato, ma la lettura Rewards non è aggiornata/);assert.ok(!p.html.includes('<strong>60</strong>'));
+ const manual=await panel([reading],{snapshot,lastSeen:now});assert.match(manual.html,/punti confermati a mano/);assert.match(manual.html,/<strong>18<\/strong>/);
+ const automatic=await panel([],{snapshot,lastSeen:now,phoneReaderEnabled:true,phoneReading:{source:'phone-screen',date:today,observedAt:now,earned:12,total:30}});assert.match(automatic.html,/punti telefono confermati/);assert.ok(!automatic.html.includes('punti confermati a mano'));
 });
 test('partial reading displays confirmed points and contributes its residual once',async()=>{
  const p=await panel([checkin,reading]);

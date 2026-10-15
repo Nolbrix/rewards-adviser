@@ -18,6 +18,20 @@ test('missing dashboard opens one inactive Rewards page rather than searching',a
  assert.equal(typeof factory,'function');const b=boundary();b.tabs.splice(0,1);const a=factory(b.browser);await a.performCommand({action:'refresh'});
  assert.equal(b.created[0].url,'https://rewards.bing.com/?ref=rewardspanel');assert.equal(b.created[0].active,false);
 });
+test('automatic refresh reopens a missing Rewards dashboard and does not repeatedly open it',async()=>{
+ const b=boundary();b.tabs.splice(0,1);b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:2,browser:'Chrome',autoRefresh:true};
+ const a=factory(b.browser,async()=>({ok:true,json:async()=>({state:{accounts:[]},commands:[]})}));await a.alarm('rewards-sync');await a.alarm('rewards-sync');
+ assert.deepEqual(b.created,[{url:'https://rewards.bing.com/?ref=rewardspanel',active:false}]);assert.equal(b.reloaded.length,0);
+});
+test('a requested refresh prevents the same alarm from immediately reloading the dashboard twice',async()=>{
+ const b=boundary();b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:2,browser:'Chrome',autoRefresh:true};let delivered=false;
+ const a=factory(b.browser,async url=>({ok:true,json:async()=>{if(url.endsWith('/api/heartbeat')&&!delivered){delivered=true;return {state:{accounts:[]},commands:[{id:'refresh-one',action:'refresh'}]};}return {state:{accounts:[]},commands:[]};}}));
+ await a.alarm('rewards-sync');assert.deepEqual(b.reloaded,[1]);
+});
+test('a reader with automatic refresh disabled does not reopen its dashboard',async()=>{
+ const b=boundary();b.tabs.splice(0,1);b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:2,browser:'Chrome',autoRefresh:false};
+ const a=factory(b.browser,async()=>({ok:true,json:async()=>({state:{accounts:[]},commands:[]})}));await a.alarm('rewards-sync');assert.equal(b.created.length,0);
+});
 test('bad configuration cannot be saved to browser storage',async()=>{
  assert.equal(typeof factory,'function');const b=boundary();const a=factory(b.browser);
  await assert.rejects(()=>a.saveConfig({token:'abc',slot:9,browser:'Chrome',alias:'Alice',email:'a@example.com'}));assert.equal(b.store.config,undefined);
