@@ -15,7 +15,7 @@ Rewards Adviser 1.5 uses Firebase Authentication and Cloud Firestore. Keep the p
 
 Firebase Authentication processes login email/password or Google identity. Passwords are not stored by this extension. Firebase ID and refresh tokens stay in trusted browser extension storage. They never enter diagnostic dumps, the Rewards relay or shared source packages.
 
-A verified user's private Firestore path is `users/{uid}/devices/{deviceId}`. Its backup contains the current PC's relay key, up to three reader emails/names/browser choices, selected photo, display name and gradient theme. The device identifier derives from the random local relay key, not hardware IDs. Repeated unchanged settings do not cause repeated writes.
+A verified user's private Firestore path is `users/{uid}/devices/{deviceId}`. Its backup contains the current PC's relay key, up to three reader emails/names/browser choices, selected photo, banner, display name and gradient theme. The device identifier derives from the random local relay key, not hardware IDs. Repeated unchanged settings do not cause repeated writes.
 
 Restoring another PC's reader configuration keeps the current PC's independently generated relay key. A user can explicitly download a private backup containing the saved key for recovery. Such files are personal, ignored by Git and must not be redistributed. No Microsoft passwords, Microsoft cookies, Rewards captures or progress counters are included in cloud backups.
 
@@ -30,3 +30,7 @@ The user is considering optional GBP 3 PayPal support in the future. Version 1.5
 - https://firebase.google.com/docs/auth/web/chrome-extension
 - https://firebase.google.com/docs/reference/rest/auth
 - https://firebase.google.com/docs/firestore/security/rules-conditions
+
+## Profile artwork and badges
+
+Banners accept raster JPG, PNG or WebP uploads. The browser crops and recompresses images before saving; remote URLs and SVG are rejected. Photo and banner data together are limited to 230,000 characters, leaving room for account settings within the private Firestore payload limit. Badges are derived from the theme and are decorative; they are not access-control roles.
