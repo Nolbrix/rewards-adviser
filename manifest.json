@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "1.4.0",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://rewards.bing.com/*",
+    "https://rewards.microsoft.com/*",
+    "https://www.bing.com/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "extension/background.js"
+  },
+  "action": {
+    "default_title": "Rewards Adviser",
+    "default_popup": "extension/ui/index.html",
+    "default_icon": {
+      "16": "extension/icons/icon16.png",
+      "32": "extension/icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "extension/icons/icon16.png",
+    "32": "extension/icons/icon32.png",
+    "48": "extension/icons/icon48.png",
+    "128": "extension/icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://rewards.bing.com/*",
+        "https://rewards.microsoft.com/*"
+      ],
+      "js": [
+        "extension/core.js",
+        "extension/parser.js",
+        "extension/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:18743 https://www.bing.com; base-uri 'none'"
+  },
+  "default_locale": "en"
+}

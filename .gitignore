@@ -1,0 +1,16 @@
+.state/
+ABBINAMENTO-LOCALE.txt
+work/
+__pycache__/
+*.pyc
+extension/local-link.json
+extension/local-link.tmp
+outputs/
+*.zip
+*.bmp
+.env
+.env.*
+connection-*.tmp
+node_modules/
+docs/superpowers/
+VERIFICA.txt
