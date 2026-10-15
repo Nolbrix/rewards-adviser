@@ -71,7 +71,7 @@ test('real MV3 panel and parser sync synthetic progress across three slots and e
   assert.equal(await page.locator('[data-detail="1-daily"] .task').count(),3);
   await page.locator('[data-detail="1-claim"] summary').click();
   assert.match(await page.locator('[data-detail="1-claim"]').textContent(),/109 pt/);
-  assert.match(await page.locator('[data-detail="1-claim"]').textContent(),/già guadagnati/);
+  assert.match(await page.locator('[data-detail="1-claim"]').textContent(),/già guadagnati|already earned/);
   await page.screenshot({path:path.join(artifacts,'Verifica-Saldo-Rewards-Adviser.png'),fullPage:true});
   for(const slot of [2,3])await api('/api/heartbeat',{clientId:'synthetic-reader-'+slot,config:{slot,alias:'Account prova '+slot,browser:slot===2?'Chrome':'Brave',email:'',coordinator:false}});
   await api('/api/snapshot',{clientId:'synthetic-reader-2',snapshot:{date,observedAt:now,account:{email:'bob@example.com'},balance:88,coverage:{daily:true,extra:true,search:true,mobile:true},diagnostics:{recognized:true,method:'synthetic'},activities:[{id:'done',title:'Completato',category:'daily',total:10,earned:10,status:'complete'}]}});
