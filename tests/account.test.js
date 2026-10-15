@@ -8,6 +8,74 @@ function setup(respond,backupProvider=null){
 }
 const credential={idToken:'firebase-id-token',refreshToken:'private-refresh-token',expiresIn:'3600',localId:'alice'};
 const alice={localId:'alice',email:'alice@example.com',emailVerified:true,displayName:'Alice'};
+// Two 1x1 frames with different palette indexes; the original bytes must survive every profile path.
+const animatedGif='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAAKAAAALAAAAAABAAEAAAICRAEAIfkEAAoAAAAsAAAAAAEAAQAAAgJMAQA7';
+function gifWithComment(size){
+ const original=Buffer.from(animatedGif.split(',')[1],'base64'),blocks=[original.subarray(0,-1),Buffer.from([0x21,0xfe])];
+ while(size){const length=Math.min(255,size);blocks.push(Buffer.from([length]),Buffer.alloc(length,65));size-=length;}
+ blocks.push(Buffer.from([0,0x3b]));return 'data:image/gif;base64,'+Buffer.concat(blocks).toString('base64');
+}
+test('animated avatar and banner GIF bytes remain unchanged when cleaning a profile',()=>{
+ const clean=accounts.cleanProfile({theme:'red',photo:animatedGif,banner:animatedGif,bannerStyle:'image'});
+ assert.equal(clean.photo,animatedGif);assert.equal(clean.banner,animatedGif);assert.equal(clean.bannerStyle,'image');
+});
+test('GIF profile images reject corrupt, truncated and mislabeled animation data',()=>{
+ const bytes=Buffer.from(animatedGif.split(',')[1],'base64'),zeroWidth=Buffer.from(bytes);zeroWidth[6]=0;
+ for(const gif of ['data:image/gif;base64,AAAA','data:image/gif;base64,!!!!','data:image/gif;base64,'+bytes.subarray(0,-1).toString('base64'),'data:image/gif;base64,'+zeroWidth.toString('base64'),'data:image/gif;base64,'+Buffer.from('GIF89a').toString('base64')]){
+  assert.throws(()=>accounts.cleanProfile({photo:gif}));assert.throws(()=>accounts.cleanProfile({banner:gif}));
+ }
+});
+test('GIF logical screens reject excessive dimensions and decoded pixel area before profile acceptance',()=>{
+ for(const [width,height] of [[10000,10000],[65535,65535],[4097,1],[1,4097],[2049,2048]]){
+  const bytes=Buffer.from(animatedGif.split(',')[1],'base64');bytes.writeUInt16LE(width,6);bytes.writeUInt16LE(height,8);
+  const gif='data:image/gif;base64,'+bytes.toString('base64');assert.throws(()=>accounts.cleanProfile({photo:gif}));assert.throws(()=>accounts.cleanProfile({banner:gif}));
+ }
+ const bytes=Buffer.from(animatedGif.split(',')[1],'base64');bytes.writeUInt16LE(4096,6);bytes.writeUInt16LE(1024,8);
+ const gif='data:image/gif;base64,'+bytes.toString('base64');assert.equal(accounts.cleanProfile({photo:gif}).photo,gif);
+});
+test('GIF frames must stay inside their declared logical screen',()=>{
+ for(const [offset,value] of [[28,1],[30,1],[32,2],[34,2],[51,1],[53,1],[55,2],[57,2]]){
+  const bytes=Buffer.from(animatedGif.split(',')[1],'base64');bytes.writeUInt16LE(value,offset);
+  assert.throws(()=>accounts.cleanProfile({photo:'data:image/gif;base64,'+bytes.toString('base64')}));
+ }
+ const bytes=Buffer.from(animatedGif.split(',')[1],'base64');bytes.writeUInt16LE(4096,6);bytes.writeUInt16LE(1024,8);bytes.writeUInt16LE(4095,28);bytes.writeUInt16LE(1023,30);
+ const gif='data:image/gif;base64,'+bytes.toString('base64');assert.equal(accounts.cleanProfile({banner:gif}).banner,gif);
+});
+test('GIF graphic control extensions require their four-byte payload and zero terminator',()=>{
+ const bytes=Buffer.from(animatedGif.split(',')[1],'base64');
+ const short=Buffer.concat([bytes.subarray(0,21),Buffer.from([1,0,0]),bytes.subarray(27)]),unterminated=Buffer.from(bytes);unterminated[26]=1;
+ for(const gif of [short,unterminated])assert.throws(()=>accounts.cleanProfile({photo:'data:image/gif;base64,'+gif.toString('base64')}));
+});
+test('valid GIFs respect separate avatar and banner limits without changing their bytes',()=>{
+ const avatar=gifWithComment(134000),banner=gifWithComment(119400);
+ assert.equal(avatar.length,179482);assert.equal(banner.length,159942);
+ assert.equal(accounts.cleanProfile({photo:avatar}).photo,avatar);assert.equal(accounts.cleanProfile({banner}).banner,banner);
+ assert.throws(()=>accounts.cleanProfile({photo:gifWithComment(134400)}));assert.throws(()=>accounts.cleanProfile({banner:gifWithComment(119500)}));
+});
+test('the image selected second uses the remaining combined budget in either direction',()=>{
+ assert.equal(typeof accounts.profileImageBudget,'function');
+ assert.equal(accounts.profileImageBudget(false,''),180000);assert.equal(accounts.profileImageBudget(true,''),160000);
+ assert.equal(accounts.profileImageBudget(false,'x'.repeat(150000)),80000);assert.equal(accounts.profileImageBudget(true,'x'.repeat(170000)),60000);
+ const photo=gifWithComment(100000),banner=gifWithComment(71600),over=gifWithComment(71800);
+ assert.equal(photo.length+banner.length,229932);assert.equal(photo.length+over.length,230200);
+ assert.equal(accounts.cleanProfile({photo,banner}).banner,banner);assert.throws(()=>accounts.cleanProfile({photo,banner:over}));
+});
+test('animated GIFs survive profile save, private cloud backup, export and restore verbatim',async()=>{
+ let cloud;const document=()=>({name:'projects/example/databases/(default)/documents/users/alice/devices/'+'f'.repeat(32),fields:cloud.fields});
+ const t=setup((url,body)=>{
+  if(url.includes('lookup'))return {users:[alice]};if(!url.includes('firestore'))return credential;
+  if(body.fields){cloud=body;return body;}return url.includes('pageSize')?{documents:[document()]}:document();
+ },async()=>({token:'a'.repeat(48),readers:[]}));
+ await t.app.handle({type:'AUTH_SIGNIN',email:alice.email,password:'password'});
+ const profile={theme:'red',photo:animatedGif,banner:gifWithComment(12),bannerStyle:'image'};
+ const saved=await t.app.handle({type:'AUTH_PROFILE',profile});assert.equal(saved.profile.photo,profile.photo);assert.equal(saved.profile.banner,profile.banner);
+ await t.app.handle({type:'AUTH_CLOUD_SAVE'});const payload=JSON.parse(cloud.fields.payload.stringValue);assert.equal(payload.profile.photo,profile.photo);assert.equal(payload.profile.banner,profile.banner);assert.ok(Buffer.byteLength(cloud.fields.payload.stringValue,'utf8')<250000);
+ const list=await t.app.handle({type:'AUTH_CLOUD_LIST'});assert.equal(list.backups[0].profile.photo,profile.photo);assert.equal(list.backups[0].profile.banner,profile.banner);
+ const exported=await t.app.handle({type:'AUTH_CLOUD_EXPORT',device:'f'.repeat(32)});assert.equal(exported.profile.photo,profile.photo);assert.equal(exported.profile.banner,profile.banner);
+ await t.app.handle({type:'AUTH_PROFILE',profile:{theme:'blue'}});
+ const restored=await t.app.handle({type:'AUTH_CLOUD_RESTORE',device:'f'.repeat(32)});assert.equal(restored.profile.photo,profile.photo);assert.equal(restored.profile.banner,profile.banner);
+ await t.app.handle({type:'AUTH_SIGNOUT'});const signed=await t.app.handle({type:'AUTH_SIGNIN',email:alice.email,password:'password'});assert.equal(signed.profile.photo,profile.photo);assert.equal(signed.profile.banner,profile.banner);
+});
 test('profile banners retain only bounded local raster images and supported visual presets',()=>{
  const profile=accounts.cleanProfile({theme:'red',name:'Alice',banner:'data:image/jpeg;base64,YQ==',bannerStyle:'image',role:'DEV'});
  assert.equal(profile.banner,'data:image/jpeg;base64,YQ==');assert.equal(profile.bannerStyle,'image');assert.equal(profile.role,undefined);
