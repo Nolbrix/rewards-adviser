@@ -43,6 +43,42 @@ test('a reader with automatic refresh disabled does not reopen its dashboard',as
  const b=boundary();b.tabs.splice(0,1);b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:2,browser:'Chrome',autoRefresh:false};
  const a=factory(b.browser,async()=>({ok:true,json:async()=>({state:{accounts:[]},commands:[]})}));await a.alarm('rewards-sync');assert.equal(b.created.length,0);
 });
+
+function networkFixture(){
+ const b=boundary(),sent=[],requests=[];b.store.config={clientId:'reader-one',token:'a'.repeat(48),slot:1,browser:'Chrome',email:'alice@example.com',autoRefresh:true};
+ const html='<script>var dashboard = '+JSON.stringify({userStatus:{email:'alice@example.com',availablePoints:100},dailySetPromotions:{[require('../extension/core.js').dayKey()]:[{offerId:'fresh',title:'Fresh network daily',points:10,complete:true}]}})+';</script>';
+ const fetcher=async(url,options)=>{requests.push(url);if(url.startsWith('https://rewards.'))return {ok:true,url,text:async()=>html};if(url.startsWith('https://www.bing.com'))throw Error('Search unavailable');if(url.endsWith('/api/snapshot'))sent.push(JSON.parse(options.body).snapshot);return {ok:true,json:async()=>({state:{accounts:[]},commands:[],accepted:true})};};
+ return {b,sent,requests,fetcher};
+}
+test('the alarm updates a background reader from authenticated network data without reloading tabs',async()=>{
+ const f=networkFixture();f.b.store.localSnapshot={observedAt:Date.now()-600000};const a=factory(f.b.browser,f.fetcher);
+ await a.alarm('rewards-sync');assert.equal(f.sent.length,1);assert.equal(f.sent[0].balance,100);assert.equal(f.sent[0].activities[0].status,'complete');
+ assert.equal(f.b.store.readerStatus.transport,'worker');assert.equal(f.b.reloaded.length,0);assert.equal(f.b.created.length,0);
+ await a.alarm('rewards-sync');assert.equal(f.sent.length,1);
+});
+test('a refresh command requests a network read on the next alarm despite its regular interval',async()=>{
+ const f=networkFixture(),a=factory(f.b.browser,f.fetcher);await a.alarm('rewards-sync');await a.performCommand({action:'refresh'});await a.alarm('rewards-sync');
+ assert.equal(f.sent.length,2);assert.deepEqual(f.b.reloaded,[1]);assert.equal(f.b.store.readerRefreshDue,false);
+});
+test('overlapping background alarms share a single reader request',async()=>{
+ const f=networkFixture();let release,entered;const pending=new Promise(resolve=>{release=resolve;}),started=new Promise(resolve=>{entered=resolve;});
+ const a=factory(f.b.browser,async(url,options)=>{if(url.startsWith('https://rewards.')){entered();await pending;}return f.fetcher(url,options);});
+ const first=a.alarm('rewards-sync');await started;const second=a.alarm('rewards-sync');release();await Promise.all([first,second]);assert.equal(f.sent.length,1);
+});
+test('a suspended Bing injection cannot hold the entire background refresh indefinitely',{timeout:12000},async()=>{
+ const f=networkFixture();f.b.tabs[1].status='complete';f.b.browser.scripting={executeScript:async()=>new Promise(()=>{})};const a=factory(f.b.browser,f.fetcher);
+ let timer;try{const result=await Promise.race([a.alarm('rewards-sync'),new Promise(resolve=>{timer=setTimeout(()=>resolve('stuck'),9500);})]);
+  assert.notEqual(result,'stuck');assert.equal(f.sent.length,1);assert.equal(f.sent[0].activities[0].status,'complete');assert.equal(f.sent[0].diagnostics.searchStatus,'unavailable');
+  f.b.store.readerAttemptAt=0;await a.alarm('rewards-sync');assert.equal(f.sent.length,2);
+ }finally{clearTimeout(timer);}
+});
+test('frozen Bing pages are skipped without bringing them to the foreground',async()=>{
+ const f=networkFixture(),injections=[];f.b.tabs[1].status='complete';f.b.tabs[1].frozen=true;
+ f.b.browser.tabs.create=async props=>{f.b.created.push(props);return {id:3,url:props.url,status:'complete'};};
+ f.b.browser.scripting={executeScript:async options=>{injections.push(options.target.tabId);return [];}};
+ await factory(f.b.browser,f.fetcher).alarm('rewards-sync');
+ assert.equal(f.sent.length,1);assert.deepEqual(injections,[3]);assert.equal(f.b.created[0].active,false);assert.equal(f.b.created[0].url,'https://www.bing.com/');
+});
 test('bad configuration cannot be saved to browser storage',async()=>{
  assert.equal(typeof factory,'function');const b=boundary();const a=factory(b.browser);
  await assert.rejects(()=>a.saveConfig({token:'abc',slot:9,browser:'Chrome',alias:'Alice',email:'a@example.com'}));assert.equal(b.store.config,undefined);

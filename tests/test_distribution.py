@@ -17,7 +17,7 @@ RUNTIME_FILES = (
     'manifest.json', '_locales/en/messages.json', '_locales/it/messages.json',
     'extension/strings.js', 'extension/i18n.js', 'extension/_locales/en/messages.json', 'extension/_locales/it/messages.json',
     'companion/connection.py', 'extension/background.js', 'extension/content.js',
-    'extension/core.js', 'extension/parser.js', 'extension/search.js', 'extension/profiles.js',
+    'extension/core.js', 'extension/parser.js', 'extension/reader.js', 'extension/search.js', 'extension/profiles.js',
     'extension/ui/index.html', 'extension/ui/ui.js', 'extension/ui/ui.css',
     'extension/ui/demo.js', 'extension/public-identity.json', 'extension/account.js', 'extension/auth-config.json', 'extension/auth-offscreen.html', 'extension/auth-offscreen.js', 'extension/ui/account-ui.js', 'extension/icons/rewards-adviser.svg', 'extension/icons/icon16.png',
     'extension/icons/icon32.png', 'extension/icons/icon48.png',

@@ -10,6 +10,8 @@ test('the saved modern Rewards HTML is recognized without executing page scripts
   const context=await browser.newContext({offline:true});await context.route('**/*',route=>route.abort());
   const page=await context.newPage();await page.addScriptTag({path:path.join(root,'extension/core.js')});await page.addScriptTag({path:path.join(root,'extension/parser.js')});
   const result=await page.evaluate(html=>RewardsParser.readDocument(new DOMParser().parseFromString(html,'text/html'),{now:Date.parse('2026-10-15T10:00:00Z'),timezone:'Europe/Rome'}),html);
+  const workerResult=require('../extension/parser.js').readHtml(html,{now:Date.parse('2026-10-15T10:00:00Z'),timezone:'Europe/Rome'});
+  assert.deepEqual(workerResult,result,'the background reader must recognize the same structured dashboard as the document reader');
   assert.equal(result.diagnostics.recognized,true);assert.equal(result.balance,40590);
   if(process.env.REWARDS_SAVED_HTML)assert.equal(result.account.email,'alice@example.com');
   const daily=result.activities.filter(a=>a.category==='daily');assert.equal(daily.length,3);

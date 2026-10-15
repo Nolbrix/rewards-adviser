@@ -76,3 +76,45 @@ test('new-program membership marks a shared search allowance without inventing e
  const records=[...flightRecords,['ac',{key:'SearchAndEarn',supportedLevels:{newLevel1:'15',newLevel2:'30',newLevel3:'60'}}]];
  const s=parser.readFlight([flightScript(records)],flightOptions);assert.equal(s.searchMode,'combined');assert.equal(s.coverage.search,false);assert.ok(!s.activities.some(a=>['search','desktop','mobile'].includes(a.category)));
 });
+
+test('a worker reads legacy dashboard HTML without a DOM or executing page code',()=>{
+ const html='<html><body><script data-description="a > b">globalThis.__rewardsHtmlExecuted=true; var dashboard = '+JSON.stringify(fixture)+';</script></body></html>';
+ const s=parser.readHtml(html,options);
+ assert.equal(s.balance,12345);assert.equal(s.account.email,'alice@example.com');
+ assert.equal(s.activities.find(a=>a.id==='desktop').earned,30);
+ assert.equal(s.activities.find(a=>a.id==='daily1').total,20);
+ assert.equal(globalThis.__rewardsHtmlExecuted,undefined);
+});
+
+test('a worker joins streamed dashboard HTML and retains only the verified profile identity',()=>{
+ const profile={className:'rounded-cornerFlyoutRest',children:[{className:'pii',children:'reader@example.com'},{instrument:{name:'HeaderProfileFlyout_Logout'}}]};
+ const stream=flightScript([...flightRecords,['ab',profile]]);
+ const text=stream.slice('self.__next_f.push([1,'.length,-3);
+ const decoded=JSON.parse(text),split=decoded.indexOf('40590')+2;
+ const html='<script>self.__next_f.push([1,'+JSON.stringify(decoded.slice(0,split))+']);</script><SCRIPT>self.__next_f.push([1,'+JSON.stringify(decoded.slice(split))+']);</SCRIPT>';
+ const s=parser.readHtml(html,flightOptions);
+ assert.equal(s.balance,40590);assert.equal(s.account.email,'reader@example.com');
+ assert.equal(s.activities.filter(a=>a.category==='daily').length,3);
+ assert.equal(s.activities.find(a=>a.id==='pointsclaim').category,'claim');
+});
+
+test('worker HTML parsing ignores scripts inside comments, raw text, templates and external scripts',()=>{
+ const decoy='<script>var dashboard = '+JSON.stringify(fixture)+';</script>';
+ const wrappers=['<!--'+decoy+'-->','<textarea>'+decoy+'</textarea>','<style>'+decoy+'</style>','<title>'+decoy+'</title>','<iframe>'+decoy+'</iframe>','<template><template>'+decoy+'</template>'+decoy+'</template>','<script src="/external.js">var dashboard = '+JSON.stringify(fixture)+'</script>'];
+ for(const html of wrappers){const s=parser.readHtml(html,options);assert.equal(s.diagnostics.recognized,false);assert.equal(s.balance,null);}
+ const real=parser.readHtml(wrappers.join('')+'<script>var dashboard = '+JSON.stringify(fixture)+';</script>',options);
+ assert.equal(real.balance,12345);
+});
+
+test('worker HTML identity cannot come from unrelated rendered email or malformed script data',()=>{
+ const s=parser.readHtml('<div data-rewards-email="wrong@example.com">wrong@example.com</div><script>'+flightScript(flightRecords)+'</script>',flightOptions);
+ assert.equal(s.balance,40590);assert.equal(s.account.email,null);
+ const bad=parser.readHtml('<script>var dashboard={"userStatus":dangerous()};</script>',options);
+ assert.equal(bad.diagnostics.recognized,false);assert.equal(bad.activities.length,0);
+});
+
+test('worker HTML parsing fails closed for missing data, incomplete scripts and oversized responses',()=>{
+ for(const html of [null,{},'<html><h1>Sign in</h1></html>','<!-- <script>var dashboard='+JSON.stringify(fixture),'<script>var dashboard='+JSON.stringify(fixture),'<script>'+flightScript(flightRecords)+'</script>'+' '.repeat(6000000)]){
+  const s=parser.readHtml(html,options);assert.equal(s.diagnostics.recognized,false);assert.equal(s.balance,null);assert.equal(s.coverage.search,false);assert.equal(s.account.email,null);
+ }
+});

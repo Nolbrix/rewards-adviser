@@ -6,7 +6,7 @@ const packages=process.env.REWARDS_TEST_PACKAGES;
 const {chromium}=packages?require(path.join(packages,'playwright')):require('playwright');
 const root=path.resolve(__dirname,'..'),work=path.join(root,'work');fs.mkdirSync(work,{recursive:true});const artifacts=process.env.REWARDS_TEST_OUTPUTS||path.join(work,'test-artifacts');fs.mkdirSync(artifacts,{recursive:true});
 const relayPort=Number(process.env.REWARDS_TEST_RELAY_PORT||18744),relayBase=`http://127.0.0.1:${relayPort}`;
-test('real MV3 panel and parser sync synthetic progress across three slots and export safe dumps', {timeout:90000},async()=>{
+test('real MV3 panel and parser sync synthetic progress across three slots and export safe dumps', {timeout:120000},async()=>{
  const temp=fs.mkdtempSync(path.join(work,'integration-'));let context,server;
  try{
   server=spawn(process.env.REWARDS_TEST_PYTHON||'python',[path.join(__dirname,'serve_fixture.py'),path.join(temp,'state')],{windowsHide:true,stdio:['ignore','pipe','pipe']});
@@ -104,6 +104,33 @@ test('real MV3 panel and parser sync synthetic progress across three slots and e
   await preview.screenshot({path:path.join(artifacts,'Anteprima-Rewards-Adviser.png'),fullPage:true});
   await page.getByRole('button',{name:/^(Impostazioni|Settings)$/,exact:true}).click();await page.locator('#config-dialog').waitFor({state:'visible'});assert.equal(await page.locator('#profile').inputValue(),'custom');
   await page.screenshot({path:path.join(artifacts,'Configurazione-Semplice-Rewards-Adviser.png'),fullPage:true});
+  // A real MV3 alarm must retrieve fresh data while the source page cannot run
+  // timers or content scripts. The response changes only on the network, so a
+  // repeated parse of the old source document cannot satisfy this assertion.
+  const backgroundData={userStatus:{availablePoints:40590,email:'alice@example.com'},dailySetPromotions:{[`${Number(month)}/${Number(day)}/${year}`]:[{offerId:'background-verified',title:'Background refresh verified',points:30,complete:true}]},morePromotions:[]};
+  let workerRewardsRequests=0,sourceNavigations=0;
+  const sourceUrl=rewards.url();rewards.on('framenavigated',frame=>{if(frame===rewards.mainFrame())sourceNavigations++;});
+  await context.route('https://rewards.bing.com/**',route=>{
+   assert.equal(route.request().method(),'GET');
+   if(route.request().serviceWorker())workerRewardsRequests++;
+   return route.fulfill({contentType:'text/html',body:'<!doctype html><title>Fresh background fixture</title><script>var dashboard = '+JSON.stringify(backgroundData)+';</script>'});
+  });
+  await page.bringToFront();
+  const activeBefore=await page.evaluate(async()=>(await chrome.tabs.query({active:true,currentWindow:true})).map(tab=>tab.id));
+  const sourceSession=await context.newCDPSession(rewards);
+  try{
+   await sourceSession.send('Page.setWebLifecycleState',{state:'frozen'});
+   await page.evaluate(async()=>{await chrome.storage.local.set({readerAttemptAt:0,readerRefreshDue:true});await chrome.alarms.create('rewards-sync',{when:Date.now()+500});});
+   await page.waitForFunction(()=>[...document.querySelectorAll('[data-detail="1-daily"] .task')].some(task=>task.textContent.includes('Background refresh verified')),null,{timeout:20000});
+   const refreshed=await api('/api/state'),snapshot=refreshed.accounts[0].snapshot;
+   assert.equal(snapshot.account.email,'alice@example.com');assert.equal(snapshot.balance,40590);assert.equal(snapshot.diagnostics.recognized,true);
+   const backgroundActivity=snapshot.activities.find(activity=>activity.id==='background-verified');
+   assert.ok(backgroundActivity,'Fresh relay snapshot missing the background activity: '+JSON.stringify({snapshot,storage:await page.evaluate(()=>chrome.storage.local.get(['localSnapshot','readerStatus','readerAttemptAt']))}));
+   assert.equal(backgroundActivity.earned,30);
+   assert.ok(workerRewardsRequests>0,'The extension worker must fetch the Rewards response directly.');
+   assert.equal(sourceNavigations,0,'The frozen source tab must not need a reload.');assert.equal(rewards.url(),sourceUrl);
+   const activeAfter=await page.evaluate(async()=>(await chrome.tabs.query({active:true,currentWindow:true})).map(tab=>tab.id));assert.deepEqual(activeAfter,activeBefore,'Background updates must not steal tab focus.');
+  }finally{await sourceSession.send('Page.setWebLifecycleState',{state:'active'}).catch(()=>{});await sourceSession.detach().catch(()=>{});}
   if(sourceErrors.length)console.log('External browser-page errors (separate from the extension UI): '+JSON.stringify(sourceErrors));
   assert.deepEqual(errors,[]);
  }finally{if(context)await context.close();if(server){server.kill();await new Promise(resolve=>server.once('exit',resolve));}fs.rmSync(temp,{recursive:true,force:true});}
