@@ -16,7 +16,7 @@ A local Microsoft Rewards dashboard for **up to three accounts** on Microsoft Ed
 6. Repeat for additional accounts, using a separate signed-in browser profile for each. You may use one, two or three accounts.
 7. Optionally install another copy as **Dashboard and reminders**. Enable the reminder coordinator in **one browser profile only**.
 
-Keep the source browsers and a Rewards tab open. The dashboard can collect the readings from all three profiles on the same PC. Run **STOP.cmd** to stop the local service; run **START.cmd** again after restarting Windows.
+Keep the source browsers running and signed in to Rewards/Bing. With automatic updates enabled, the extension requests fresh counters about every two minutes, even when Rewards tabs are in the background or frozen. It does not rely on page timers or change tab focus. If needed it reuses a Rewards tab or opens one inactive recovery tab; failed identity checks keep the previous reading marked as stale. The dashboard can collect readings from all three profiles on the same PC. Run **STOP.cmd** to stop the local service; run **START.cmd** again after restarting Windows.
 
 ## Language
 
