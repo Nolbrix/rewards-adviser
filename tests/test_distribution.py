@@ -229,8 +229,8 @@ console.log(JSON.stringify({defaults:[1,2,3,null].map(RewardsCore.defaultAlias),
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             call = json.loads((spaced / 'launcher-call.json').read_text())
             self.assertEqual(call['action'], action)
-            self.assertEqual(Path(call['cwd']), spaced)
-            self.assertEqual(Path(call['root']), spaced)
+            self.assertTrue(Path(call['cwd']).samefile(spaced))
+            self.assertTrue(Path(call['root']).samefile(spaced))
             self.assertGreaterEqual(tuple(call['version']), (3, 11))
 
     def test_missing_runtime_asset_does_not_create_incomplete_package(self):
