@@ -76,7 +76,10 @@ test('real MV3 panel and parser sync synthetic progress across three slots and e
   await api('/api/snapshot',{clientId:'synthetic-reader-2',snapshot:{date,observedAt:now,account:{email:'bob@example.com'},balance:88,coverage:{daily:true,extra:true,search:true,mobile:true},diagnostics:{recognized:true,method:'synthetic'},activities:[{id:'done',title:'Completato',category:'daily',total:10,earned:10,status:'complete'}]}});
   await page.waitForFunction(()=>document.querySelector('[data-account="2"] .balance strong')?.textContent==='88',{timeout:10000});
   assert.equal(await page.locator('.account-card').count(),3);
-  await page.locator('[data-detail="1-phone"] summary').click();await page.locator('#phone-1-manual-checkin').selectOption('incomplete');
+   await page.locator('[data-detail="1-phone"] summary').click();const previousCheckin=await page.locator('#phone-1-manual-checkin').elementHandle();await page.locator('#phone-1-manual-checkin').selectOption('incomplete');
+   // Changing the select updates its value immediately; wait for the saved-state render
+   // before filling another form, or that render can replace the new draft mid-entry.
+   await page.waitForFunction(select=>!select.isConnected,previousCheckin);
   await page.waitForFunction(()=>document.querySelector('#phone-1-manual-checkin')?.value==='incomplete');
   await page.locator('#add-title-1').fill('Attività test mobile');await page.locator('#add-points-1').fill('5');await page.locator('.phone-add:not(.phone-read)[data-slot="1"] button').click();
   await page.waitForFunction(()=>document.querySelector('[data-account="1"] .remaining strong')?.textContent==='183');
