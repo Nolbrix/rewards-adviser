@@ -2,7 +2,7 @@
 
 A local Microsoft Rewards dashboard for **up to three accounts** on Microsoft Edge, Chrome and Brave. The extension shows detected balances, daily activities, bonuses and search progress, with optional reminders every ten minutes.
 
-**made by nolbrix** · Version 1.5 adds optional Google/email sign-in, private configuration backup and personal gradient themes. The default interface has no portrait.
+**made by nolbrix** · Version 1.6 adds a personal profile banner, theme badges and a signature hover effect. Google/email sign-in, private backups and the three Rewards readers remain available.
 
 **Windows 10/11 and Python 3.11+ are required.** No Node.js installation is needed to use the extension. This is an independent project, unaffiliated with Microsoft.
 
@@ -34,9 +34,9 @@ The extension receives the key through the generated local connection file. Acco
 
 ## Your Rewards Adviser account
 
-Sign in with Google or register using email/password. Verify your email to enable private backups. Your profile can use a chosen photo and a blue, red, black, green or purple gradient theme. Signing out returns to the neutral theme and keeps the local Rewards readers working.
+Sign in with Google or register using email/password. Verify your email to enable private backups. Your profile can use a chosen photo, a custom banner or a gradient preset, and a blue, red, black, green or purple theme. The corresponding decorative badges are ASTRAL, MYTHIC, ECLIPSE, EMERALD and ARCANE; they do not grant permissions. Signing out returns to the neutral theme and keeps the local Rewards readers working.
 
-Firebase processes authentication and stores a private backup of the local connection key, up to three reader emails/names/browser choices, your photo and theme. Microsoft passwords, cookies, captured pages and progress counters stay out of this backup. Backups are protected by verified-user Firestore rules and Firebase service encryption; this is not end-to-end encryption. The project administrator operates this Firebase service.
+Firebase processes authentication and stores a private backup of the local connection key, up to three reader emails/names/browser choices, your photo, banner and theme. Microsoft passwords, cookies, captured pages and progress counters stay out of this backup. Backups are protected by verified-user Firestore rules and Firebase service encryption; this is not end-to-end encryption. The project administrator operates this Firebase service.
 
 Use **Restore settings** to recover appearance and choose a reader for the current browser profile. A different PC retains its own newly generated connection key. An explicit **Download private backup** includes the saved key: keep that personal file private. Detailed setup and data handling: [Firebase setup](docs/AUTH-SETUP.md). No PayPal payment or subscription is enabled.
 
@@ -44,9 +44,7 @@ Use **Restore settings** to recover appearance and choose a reader for the curre
 
 PC/phone searches are used only when Bing exposes authenticated, identity-checked counters. Missing data remains unknown; it never means zero or complete.
 
-Article reading and check-in can be confirmed manually from the Bing app. The optional **Galaxy / Phone Link screen reader is experimental and off by default**. It needs a private calibration for the device, font and three account identities; that calibration is not distributed, and there is currently no automatic calibration wizard. Full unattended reading across all three real accounts has not yet passed acceptance. Do not enable it expecting immediate automatic setup.
-
-When calibrated, the reader attempts a cycle every 120 seconds after 15 seconds of PC inactivity. The phone must stay connected, awake and unlocked, with Bing on a recognized profile screen. A cycle may temporarily bring Phone Link forward and switch saved Bing accounts; desktop input interrupts it. It reads counters only and does not perform searches, read articles, claim rewards or redeem points.
+Article reading and check-in can be confirmed manually from the Bing app. The Galaxy automatic-reader section has been removed from the interface. Historical screen-reader code remains in the source for compatibility, but it is experimental, off by default and no longer offered by the panel. No automatic phone collection is enabled by this release.
 
 ## Development
 
@@ -74,4 +72,4 @@ See [README.html](README.html) for the Italian installation guide.
 
 Avvia **START.cmd**, carica la cartella principale come estensione non pacchettizzata e apri **Impostazioni**. Scegli un lettore da 1 a 3, il browser e la tua email Microsoft, poi premi **Salva e collega**. Ogni account deve essere già connesso a Rewards e Bing nel proprio profilo del browser. Puoi usare anche un solo account.
 
-La lingua segue automaticamente quella del browser: italiano o inglese, con inglese come alternativa per le altre lingue. La chiave viene generata sul tuo PC e non contiene dati hardware. Il progetto pubblico non contiene account, chiavi, letture o calibrazioni personali. Le letture degli articoli restano manuali finché non viene preparata e verificata la calibrazione privata del lettore sperimentale.
+La lingua segue automaticamente quella del browser: italiano o inglese, con inglese come alternativa per le altre lingue. La chiave viene generata sul tuo PC e non contiene dati hardware. Il progetto pubblico non contiene account, chiavi, letture o calibrazioni personali. Le letture degli articoli si confermano a mano dall’app Bing; la sezione Galaxy è stata rimossa.
