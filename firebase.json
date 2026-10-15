@@ -1,0 +1,46 @@
+{
+  "hosting": {
+    "public": "docs/auth",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "no-referrer"
+          }
+        ]
+      }
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "database": "(default)",
+    "location": "eur3",
+    "edition": "standard"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Rewards Adviser",
+        "supportEmail": "support@example.com",
+        "authorizedRedirectUris": [
+          "https://rewards-adviser-a1c40.firebaseapp.com/__/auth/handler"
+        ]
+      }
+    }
+  }
+}

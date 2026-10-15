@@ -2,19 +2,23 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "minimum_chrome_version": "116",
   "permissions": [
     "storage",
     "alarms",
     "notifications",
-    "scripting"
+    "scripting",
+    "offscreen"
   ],
   "host_permissions": [
     "https://rewards.bing.com/*",
     "https://rewards.microsoft.com/*",
     "https://www.bing.com/*",
-    "http://127.0.0.1/*"
+    "http://127.0.0.1/*",
+    "https://identitytoolkit.googleapis.com/*",
+    "https://securetoken.googleapis.com/*",
+    "https://firestore.googleapis.com/*"
   ],
   "background": {
     "service_worker": "extension/background.js"
@@ -48,7 +52,8 @@
     }
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:18743 https://www.bing.com; base-uri 'none'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self' http://127.0.0.1:18743 https://www.bing.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; base-uri 'none'; frame-src https://nolbrix.github.io https://*.firebaseapp.com; img-src 'self' data:;"
   },
-  "default_locale": "en"
+  "default_locale": "en",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0sdD9ReBBtBXTooLpk3nAkXVthvj7+yQcq8ITKetAY6ssgZn/2Menf2L1qYVOsozb0iEyNSjE+mh3/Q9QbOrjvBeW3JXstYxw5IgrdslJOZZMAX3XY0QzF1j0WBKIgNu9ECZy59SHjCJ0ywUK3efaxvsMUh5OZkZEs28bW0uE+HMTwlXvof+rHGaE3Ct0JjZlKpbGybqv1YptpycqvVi3OxXdV2Xoa50uc0ZkKmmUYKBHilPqIAJw3HQ2YyZP9WgeoEU4E1BPAhFGhkiC3u1h80O0vUs2lfdJRsTU1eLP39YZxzbVU7HkOi9h/dAyIU6TH36DKxT9eMxfKe70sxxLQIDAQAB"
 }

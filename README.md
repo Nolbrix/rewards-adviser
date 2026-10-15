@@ -2,21 +2,21 @@
 
 A local Microsoft Rewards dashboard for **up to three accounts** on Microsoft Edge, Chrome and Brave. The extension shows detected balances, daily activities, bonuses and search progress, with optional reminders every ten minutes.
 
-**made by Nolbrix** · Version 1.4.1 introduces a burgundy theme, a creator profile banner and an original trophy-and-points extension icon.
+**made by nolbrix** · Version 1.5 adds optional Google/email sign-in, private configuration backup and personal gradient themes. The default interface has no portrait.
 
 **Windows 10/11 and Python 3.11+ are required.** No Node.js installation is needed to use the extension. This is an independent project, unaffiliated with Microsoft.
 
 ## Install
 
 1. Download this repository using **Code → Download ZIP**, then extract it into a permanent folder.
-2. Run **AVVIA.cmd**. A local service starts in the background and prepares the connection automatically.
+2. Run **START.cmd**. A local service starts in the background and prepares the connection automatically.
 3. Open `edge://extensions`, `chrome://extensions` or `brave://extensions` in each browser profile you want to connect. Enable developer mode, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
 4. Open Rewards Adviser → **Settings**. Choose **Reader 1**, **Reader 2** or **Reader 3**, select your browser and enter your Microsoft email. The email may also be left blank to detect it from a signed-in Rewards page. Set an optional account name and choose **Save and connect**.
 5. Open Rewards and Bing in that same browser profile and sign in yourself to the corresponding Microsoft account. The extension does not log in using an email address and never asks for your password.
 6. Repeat for additional accounts, using a separate signed-in browser profile for each. You may use one, two or three accounts.
 7. Optionally install another copy as **Dashboard and reminders**. Enable the reminder coordinator in **one browser profile only**.
 
-Keep the source browsers and a Rewards tab open. The dashboard can collect the readings from all three profiles on the same PC. Run **FERMA.cmd** to stop the local service; run **AVVIA.cmd** again after restarting Windows.
+Keep the source browsers and a Rewards tab open. The dashboard can collect the readings from all three profiles on the same PC. Run **STOP.cmd** to stop the local service; run **START.cmd** again after restarting Windows.
 
 ## Language
 
@@ -31,6 +31,14 @@ At first launch, a cryptographically random key is generated for the current Win
 The extension receives the key through the generated local connection file. Account emails, progress and private phone calibration stay in `.state`. The relay listens only on `127.0.0.1:18743`. Microsoft sessions remain in their own browsers; the extension does not export Microsoft cookies or tokens.
 
 **Share the original repository ZIP or the generated public ZIP, never a folder you have already run.** An active installation contains your private local files. Generated connection files, state, phone images and working files are excluded from the source export and ignored by Git.
+
+## Your Rewards Adviser account
+
+Sign in with Google or register using email/password. Verify your email to enable private backups. Your profile can use a chosen photo and a blue, red, black, green or purple gradient theme. Signing out returns to the neutral theme and keeps the local Rewards readers working.
+
+Firebase processes authentication and stores a private backup of the local connection key, up to three reader emails/names/browser choices, your photo and theme. Microsoft passwords, cookies, captured pages and progress counters stay out of this backup. Backups are protected by verified-user Firestore rules and Firebase service encryption; this is not end-to-end encryption. The project administrator operates this Firebase service.
+
+Use **Restore settings** to recover appearance and choose a reader for the current browser profile. A different PC retains its own newly generated connection key. An explicit **Download private backup** includes the saved key: keep that personal file private. Detailed setup and data handling: [Firebase setup](docs/AUTH-SETUP.md). No PayPal payment or subscription is enabled.
 
 ## Phone points
 
@@ -64,6 +72,6 @@ See [README.html](README.html) for the Italian installation guide.
 
 ## Italiano
 
-Avvia **AVVIA.cmd**, carica la cartella principale come estensione non pacchettizzata e apri **Impostazioni**. Scegli un lettore da 1 a 3, il browser e la tua email Microsoft, poi premi **Salva e collega**. Ogni account deve essere già connesso a Rewards e Bing nel proprio profilo del browser. Puoi usare anche un solo account.
+Avvia **START.cmd**, carica la cartella principale come estensione non pacchettizzata e apri **Impostazioni**. Scegli un lettore da 1 a 3, il browser e la tua email Microsoft, poi premi **Salva e collega**. Ogni account deve essere già connesso a Rewards e Bing nel proprio profilo del browser. Puoi usare anche un solo account.
 
 La lingua segue automaticamente quella del browser: italiano o inglese, con inglese come alternativa per le altre lingue. La chiave viene generata sul tuo PC e non contiene dati hardware. Il progetto pubblico non contiene account, chiavi, letture o calibrazioni personali. Le letture degli articoli restano manuali finché non viene preparata e verificata la calibrazione privata del lettore sperimentale.

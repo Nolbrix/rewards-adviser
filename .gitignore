@@ -14,3 +14,5 @@ connection-*.tmp
 node_modules/
 docs/superpowers/
 VERIFICA.txt
+
+*private-backup*.json
