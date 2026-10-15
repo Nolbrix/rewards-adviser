@@ -2,7 +2,7 @@
 
 A local Microsoft Rewards dashboard for **up to three accounts** on Microsoft Edge, Chrome and Brave. The extension shows detected balances, daily activities, bonuses and search progress, with optional reminders every ten minutes.
 
-**made by nolbrix** · Version 1.6 adds a personal profile banner, theme badges and a signature hover effect. Google/email sign-in, private backups and the three Rewards readers remain available.
+**made by nolbrix** · Version 1.6.3 adds animated GIF profile photos and banners, plus an animated avatar aura that follows your theme. Google/email sign-in, private backups and the three Rewards readers remain available.
 
 **Windows 10/11 and Python 3.11+ are required.** No Node.js installation is needed to use the extension. This is an independent project, unaffiliated with Microsoft.
 
@@ -35,6 +35,8 @@ The extension receives the key through the generated local connection file. Acco
 ## Your Rewards Adviser account
 
 Sign in with Google or register using email/password. Verify your email to enable private backups. Your profile can use a chosen photo, a custom banner or a gradient preset, and a blue, red, black, green or purple theme. The corresponding decorative badges are ASTRAL, MYTHIC, ECLIPSE, EMERALD and ARCANE; they do not grant permissions. Signing out returns to the neutral theme and keeps the local Rewards readers working.
+
+Upload JPG/PNG/WebP images or lightweight animated GIFs from your profile editor. GIFs keep all their frames in local saves and private backups; they are never flattened. Static photos can be up to 2 MB and static banners up to 6 MB before compression. GIFs can be about 130 KB for photos or 115 KB for banners; both images share the available profile space, so a large existing image may lower the other limit. The upload message shows the available size when needed. The theme aura appears around your avatar in the profile strip, editor and account button; it stops moving when the system requests reduced motion.
 
 Firebase processes authentication and stores a private backup of the local connection key, up to three reader emails/names/browser choices, your photo, banner and theme. Microsoft passwords, cookies, captured pages and progress counters stay out of this backup. Backups are protected by verified-user Firestore rules and Firebase service encryption; this is not end-to-end encryption. The project administrator operates this Firebase service.
 
