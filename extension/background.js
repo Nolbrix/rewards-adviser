@@ -1,4 +1,4 @@
-if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.js','search.js');
+if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.js','search.js','account.js');
 (function(root,factory){const core=typeof module==='object'&&module.exports?require('./core.js'):root.RewardsCore;const search=typeof module==='object'&&module.exports?require('./search.js'):root.RewardsSearch;const api=factory(core,search);if(typeof module==='object'&&module.exports)module.exports=api;else root.RewardsBackground=api;})(globalThis,(core,search)=>{
  'use strict';
  const BASE='http://127.0.0.1:18743',REWARDS='https://rewards.bing.com/?ref=rewardspanel';
@@ -20,6 +20,8 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
  function createAdviser(browser,fetcher=globalThis.fetch,prefix=globalThis.location?.pathname?.endsWith('/extension/background.js')?'extension/':'') {
   const language=globalThis.RewardsI18n||(typeof require==='function'?require('./i18n.js'):null);
   const tr=language?language.create(browser.i18n?.getUILanguage?.()||globalThis.navigator?.language||'en',browser.i18n?.getMessage?.bind(browser.i18n)).t:(text=>text);
+  const accountModule=globalThis.RewardsAccount||(typeof require==='function'?require('./account.js'):null);
+  const account=accountModule.createAccount(browser,fetcher,prefix,async()=>{const v=await getView();return {token:v.config.token,readers:(v.state?.accounts||[]).filter(a=>a.email||a.clientId).map(a=>({slot:a.slot,alias:a.alias,email:a.email,browser:a.browser}))};},async(reader,guard)=>{const c=await config();await guard();await saveConfig({...c,slot:reader.slot,alias:reader.alias,email:reader.email,autoRefresh:true},guard);return {restored:true};});
   let pending=null,lastTick=0,configVersion=0,changingConfig=false,pageRead=null;
   async function changeConfig(action){
    if(changingConfig)throw new Error(tr('Attendi il salvataggio delle impostazioni in corso.'));
@@ -36,13 +38,13 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    const result=await response.json();if(!response.ok)throw new Error(tr(result.error||'Collegamento locale non disponibile.'));return result;
   }
   async function cache(state){await browser.storage.local.set({state,connection:{online:true,at:Date.now(),error:null}});return state;}
-  async function saveConfig(raw){
-   if(!raw||!/^([a-f0-9]{48})$/i.test((raw.token||'').trim()))throw new Error(tr('Avvia AVVIA.cmd nella cartella del progetto, poi riapri le impostazioni: il collegamento verrà compilato automaticamente.'));
+  async function saveConfig(raw,guard=async()=>{}){
+   if(!raw||!/^([a-f0-9]{48})$/i.test((raw.token||'').trim()))throw new Error(tr('Avvia START.cmd nella cartella del progetto, poi riapri le impostazioni: il collegamento verrà compilato automaticamente.'));
    if(raw.slot!==null&&![1,2,3].includes(raw.slot))throw new Error(tr('Scegli un account valido.'));
    if(!['Edge','Chrome','Brave'].includes(raw.browser))throw new Error(tr('Scegli il browser del profilo.'));
    if(raw.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw.email.trim()))throw new Error(tr('Email Microsoft non valida.'));
    return changeConfig(async()=>{const old=await config(),alias=String(raw.alias||'').trim();const c={clientId:old.clientId,token:raw.token.trim(),slot:raw.slot,alias:(alias&&alias!=='Account'?alias:core.defaultAlias(raw.slot)).slice(0,80),email:String(raw.email||'').trim().toLowerCase(),browser:raw.browser,coordinator:raw.coordinator===true,autoRefresh:raw.autoRefresh===true};
-   const result=await api('/api/heartbeat',{clientId:c.clientId,config:c},c);await browser.storage.local.set({config:c,...(old.slot!==c.slot||old.email!==c.email?{searchBinding:null,searchCache:null,searchAttempt:0}:{})});await cache(result.state);return c;});
+   await guard();const result=await api('/api/heartbeat',{clientId:c.clientId,config:c},c);await guard();await browser.storage.local.set({config:c,...(old.slot!==c.slot||old.email!==c.email?{searchBinding:null,searchCache:null,searchAttempt:0}:{})});await cache(result.state);return c;});
   }
   async function dashboards(){return (await browser.tabs.query({url:matches})).filter(t=>isRewards(t.url));}
   async function performCommand(command){const tabs=await dashboards();
@@ -125,6 +127,7 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
   }
   async function getView(){try{await tick(true);}catch{}const data=await browser.storage.local.get(['state','connection']);return {...data,config:await config()};}
   async function handle(message){
+   if(message.type?.startsWith('AUTH_'))return account.handle(message);
    if(message.type==='GET')return getView();
    if(message.type==='CONFIG'){await saveConfig(message.config);return getView();}
    if(message.type==='PING')return tick();
@@ -142,6 +145,7 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
   async function alarm(name){let state;try{state=await tick(true);}catch{return;}
    if(name==='rewards-reminder')await remind(state);
    if(name==='rewards-sync'){
+    await account.autoSync().catch(()=>{});
     const c=await config(),{lastReload=0}=await browser.storage.local.get(['lastReload']);
     if(c.slot&&c.autoRefresh&&Date.now()-lastReload>=120000){await browser.storage.local.set({lastReload:Date.now()});const tabs=await dashboards();await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));}
    }
@@ -158,6 +162,7 @@ if(typeof chrome==='object'&&chrome.runtime?.onMessage){
  }
  setup().catch(()=>{});chrome.runtime.onInstalled.addListener(()=>{setup().then(()=>adviser.performCommand({action:'scan'})).catch(()=>{});});chrome.runtime.onStartup.addListener(()=>{setup().then(()=>adviser.tick(true)).catch(()=>{});});
  chrome.alarms.onAlarm.addListener(alarm=>adviser.alarm(alarm.name).catch(()=>{}));
+ chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&changes.accountSession&&changes.accountSession.oldValue?.stamp!==changes.accountSession.newValue?.stamp)chrome.runtime.sendMessage({type:'ACCOUNT_CHANGED'}).catch(()=>{});});
  chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{
   if(!RewardsBackground.senderAllowed(sender,message?.type,chrome.runtime.id))return false;
   adviser.handle(message).then(data=>sendResponse({ok:true,data})).catch(error=>sendResponse({ok:false,error:error.message}));return true;
