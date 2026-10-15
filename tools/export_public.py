@@ -12,7 +12,7 @@ EXTRA_FILES=(
     'docs/auth/index.html','docs/auth/bridge.js','docs/auth/config.js','firestore.rules','firebase.json','docs/AUTH-SETUP.md','tests/account.test.js','tests/account.integration.js','README.md','.gitignore','package.json','.github/workflows/tests.yml',
     'companion/distribution.py','extension/manifest.json','extension/translations.json',
     'tools/build_locales.py','tools/export_public.py',
-    'tests/background.test.js','tests/core.test.js',
+    'tests/background.test.js','tests/core.test.js','tests/content.test.js',
     'tests/i18n.test.js','tests/i18n-render.test.js','tests/modern-page.test.js',
     'tests/parser.test.js','tests/phone-auto.test.js','tests/phone-ui.test.js',
     'tests/public-profiles.test.js','tests/search.test.js','tests/browser.integration.js',
