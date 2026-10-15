@@ -94,13 +94,46 @@
   if(recognized)s.diagnostics={method:'next-flight',recognized:true};
   return s;
  }
- function readDocument(doc,options={}) {
-  const scripts=[...doc.querySelectorAll('script')].map(script=>script.textContent||'');
+ function readScripts(scripts,options={}) {
   let s=readFlight(scripts,options);
   for(const script of scripts){
    const data=extractData(script);if(!data)continue;
    const candidate=fromData(data,options);if(candidate.diagnostics.recognized&&(!s.diagnostics.recognized||candidate.activities.length>s.activities.length))s=candidate;
   }
+  return s;
+ }
+ function readHtml(html,options={}) {
+  if(typeof html!=='string'||html.length>6000000)return empty(options);
+  const scripts=[];let cursor=0,templates=0;
+  // A worker has no DOMParser. Scan HTML raw-text boundaries without loading
+  // resources or evaluating JavaScript; only the same inert JSON parser is used.
+  function tagEnd(start){let quote=null;
+   for(let i=start;i<html.length;i++){const c=html[i];if(quote){if(c===quote)quote=null;}else if(c==='"'||c==="'")quote=c;else if(c==='>')return i+1;}return -1;
+  }
+  while(cursor<html.length){
+   const start=html.indexOf('<',cursor);if(start<0)break;
+   if(html.startsWith('<!--',start)){const end=html.indexOf('-->',start+4);if(end<0)break;cursor=end+3;continue;}
+   const tag=/^<(\/?)([a-z][a-z0-9:-]*)(?=[\t\n\f\r />])/i.exec(html.slice(start,start+80));
+   if(!tag){const declaration=/^<[!?]/.test(html.slice(start,start+2));cursor=declaration?tagEnd(start+2):start+1;if(cursor<0)break;continue;}
+   const end=tagEnd(start+tag[0].length);if(end<0)break;
+   cursor=end;const name=tag[2].toLowerCase(),closing=tag[1]==='/';
+   if(name==='template'){templates=Math.max(0,templates+(closing?-1:1));continue;}
+   if(closing)continue;
+   if(name==='plaintext')break;
+   if(!['script','style','textarea','title','xmp','iframe','noembed','noframes','noscript'].includes(name))continue;
+   const close=new RegExp('</'+name+'(?=[\\t\\n\\f\\r />])','ig');close.lastIndex=end;
+   const match=close.exec(html);if(!match)break;
+   const after=tagEnd(match.index+match[0].length);if(after<0)break;cursor=after;
+   if(name!=='script'||templates)continue;
+   const attributes=html.slice(start+tag[0].length,end-1),attribute=/([^\s"'<>/=]+)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/g;
+   let external=false;for(const item of attributes.matchAll(attribute)){if(item[1].toLowerCase()==='src'){external=true;break;}}
+   if(!external)scripts.push(html.slice(end,match.index));
+  }
+  return readScripts(scripts,options);
+ }
+ function readDocument(doc,options={}) {
+  const scripts=[...doc.querySelectorAll('script')].map(script=>script.textContent||'');
+  let s=readScripts(scripts,options);
   const emailElements=doc.querySelectorAll('[data-rewards-email],#id_n,#id_l,[aria-label*="@"]');
   for(const el of emailElements){const value=el.getAttribute('data-rewards-email')||el.getAttribute('aria-label')||el.textContent;const match=value?.match(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/);if(match){s.account.email=match[0].toLowerCase();break;}}
   if(s.diagnostics.recognized)return s;
@@ -124,5 +157,5 @@
   // DOM cards do not prove that an entire section was loaded: keep coverage partial.
   return s;
  }
- return {number,extractData,fromData,readFlight,readDocument};
+ return {number,extractData,fromData,readFlight,readScripts,readHtml,readDocument};
 });

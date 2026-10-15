@@ -1,4 +1,4 @@
-if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.js','search.js','account.js');
+if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.js','parser.js','reader.js','search.js','account.js');
 (function(root,factory){const core=typeof module==='object'&&module.exports?require('./core.js'):root.RewardsCore;const search=typeof module==='object'&&module.exports?require('./search.js'):root.RewardsSearch;const api=factory(core,search);if(typeof module==='object'&&module.exports)module.exports=api;else root.RewardsBackground=api;})(globalThis,(core,search)=>{
  'use strict';
  const BASE='http://127.0.0.1:18743',REWARDS='https://rewards.bing.com/?ref=rewardspanel';
@@ -21,8 +21,9 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
   const language=globalThis.RewardsI18n||(typeof require==='function'?require('./i18n.js'):null);
   const tr=language?language.create(browser.i18n?.getUILanguage?.()||globalThis.navigator?.language||'en',browser.i18n?.getMessage?.bind(browser.i18n)).t:(text=>text);
   const accountModule=globalThis.RewardsAccount||(typeof require==='function'?require('./account.js'):null);
+  const readerModule=globalThis.RewardsReader||(typeof require==='function'?require('./reader.js'):null),reader=readerModule.createReader(browser,fetcher);
   const account=accountModule.createAccount(browser,fetcher,prefix,async()=>{const v=await getView();return {token:v.config.token,readers:(v.state?.accounts||[]).filter(a=>a.email||a.clientId).map(a=>({slot:a.slot,alias:a.alias,email:a.email,browser:a.browser}))};},async(reader,guard)=>{const c=await config();await guard();await saveConfig({...c,slot:reader.slot,alias:reader.alias,email:reader.email,autoRefresh:true},guard);return {restored:true};});
-  let pending=null,lastTick=0,configVersion=0,changingConfig=false,pageRead=null,refreshVersion=0,lastRefreshAt=0,newestCapture=null;
+  let pending=null,lastTick=0,configVersion=0,changingConfig=false,pageRead=null,refreshVersion=0,lastRefreshAt=0,newestCapture=null,backgroundRead=null;
   async function changeConfig(action){
    if(changingConfig)throw new Error(tr('Attendi il salvataggio delle impostazioni in corso.'));
    changingConfig=true;configVersion++;
@@ -51,7 +52,7 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    if(refreshedAt!==null){refreshVersion++;lastRefreshAt=refreshedAt;}
    const tabs=await dashboards();
    if(command.action==='open'){if(tabs.length)await browser.tabs.update(tabs[0].id,{active:true});else await browser.tabs.create({url:REWARDS,active:true});return;}
-   if(command.action==='refresh'){await browser.storage.local.set({searchAttempt:0,searchCache:null,lastReload:refreshedAt});if(tabs.length)await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));else await browser.tabs.create({url:REWARDS,active:false});return;}
+   if(command.action==='refresh'){await browser.storage.local.set({searchAttempt:0,searchCache:null,lastReload:refreshedAt,readerRefreshDue:true});if(tabs.length)await Promise.all(tabs.map(t=>browser.tabs.reload(t.id)));else await browser.tabs.create({url:REWARDS,active:false});return;}
    if(command.action==='scan')for(const tab of tabs){try{await browser.tabs.sendMessage(tab.id,{type:'SCAN'});}catch{try{await browser.scripting.executeScript({target:{tabId:tab.id},files:['core.js','parser.js','content.js'].map(file=>prefix+file)});}catch{}}}
   }
   async function tick(force=false){
@@ -70,14 +71,14 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    const job={generation,refresh};pageRead=job;
    job.promise=(async()=>{try{
     const isBing=tab=>{try{return new URL(tab.url).origin==='https://www.bing.com';}catch{return false;}};
-    const tabs=(await browser.tabs.query({url:['https://www.bing.com/*']})).filter(isBing);let tab=tabs.find(t=>t.status==='complete')||tabs[0],created=false;
+    const tabs=(await browser.tabs.query({url:['https://www.bing.com/*']})).filter(t=>isBing(t)&&!t.frozen&&!t.discarded);let tab=tabs.find(t=>t.status==='complete')||tabs[0],created=false;
     if(!tab){const {bingTabOpenedAt=0}=await browser.storage.local.get(['bingTabOpenedAt']);if(Date.now()-bingTabOpenedAt<300000||!current())return null;
      await browser.storage.local.set({bingTabOpenedAt:Date.now()});if(!current())return null;tab=await browser.tabs.create({url:BING,active:false});created=true;
     }
     if(!Number.isInteger(tab?.id))return null;
     if(tab.status!=='complete'&&browser.tabs.get){const end=Date.now()+8000;while(Date.now()<end){if(!current())return null;tab=await browser.tabs.get(tab.id);const ownPending=created&&tab.pendingUrl===BING&&(!tab.url||tab.url==='about:blank');if(!isBing(tab)&&!ownPending)return null;if(tab.status==='complete'){if(!isBing(tab))return null;break;}await new Promise(resolve=>setTimeout(resolve,200));}if(tab.status!=='complete')return null;}
     if(!current())return null;
-    const result=await browser.scripting.executeScript({target:{tabId:tab.id,frameIds:[0]},world:'ISOLATED',func:bingPageRead});
+    let timer,result;try{result=await Promise.race([browser.scripting.executeScript({target:{tabId:tab.id,frameIds:[0]},world:'ISOLATED',func:bingPageRead}),new Promise(resolve=>{timer=setTimeout(()=>resolve(null),8000);})]);}finally{clearTimeout(timer);}
     if(!current())return null;const value=result?.[0]?.result;
     return value&&typeof value.beforeHtml==='string'&&value.beforeHtml.length<=4000000&&typeof value.afterHtml==='string'&&value.afterHtml.length<=4000000&&typeof value.flyoutText==='string'&&value.flyoutText.length<=3000000?value:null;
    }catch{return null;}finally{if(pageRead===job)pageRead=null;}})();return job.promise;
@@ -125,6 +126,22 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    if(!current())return {accepted:false};newestCapture={generation,observedAt};
    await tick();if(!current())return {accepted:false};snapshot=await withSearch(snapshot,c,generation,refresh,current);if(!snapshot||!current())return {accepted:false};await browser.storage.local.set({localSnapshot:snapshot});if(!current())return {accepted:false};const response=await api('/api/snapshot',{clientId:c.clientId,slot:c.slot,expectedEmail:c.email||null,snapshot},c);if(current())await cache(response.state);return {accepted:response.accepted};
   }
+  async function refreshReader(force=false){
+   if(backgroundRead)return backgroundRead.promise;
+   const job={generation:configVersion,refresh:refreshVersion};backgroundRead=job;
+   const current=()=>!changingConfig&&job.generation===configVersion&&job.refresh===refreshVersion;
+   job.promise=(async()=>{try{
+    const c=await config(),saved=await browser.storage.local.get(['readerAttemptAt','readerRefreshDue','state']);
+    if(!current()||!c.slot||(!c.autoRefresh&&!force&&!saved.readerRefreshDue))return {skipped:true};
+    const now=Date.now();if(!force&&!saved.readerRefreshDue&&now-(saved.readerAttemptAt||0)<120000)return {skipped:true};
+    await browser.storage.local.set({readerAttemptAt:now,readerRefreshDue:false});if(!current())return {accepted:false};
+    const expected=c.email||saved.state?.accounts?.find(a=>a.slot===c.slot)?.email||null;
+    const result=await reader.read(expected,current);if(!current())return {accepted:false};
+    if(!result){await browser.storage.local.set({readerStatus:{status:'unavailable',at:Date.now()}});return {accepted:false};}
+    const outcome=await capture(result.snapshot);if(current())await browser.storage.local.set({readerStatus:{status:outcome.accepted?'ok':'cancelled',at:Date.now(),transport:result.transport}});
+    return outcome;
+   }finally{if(backgroundRead===job)backgroundRead=null;}})();return job.promise;
+  }
   async function remind(state,now=Date.now()){
    const c=await config(),{lastNotificationAt=0}=await browser.storage.local.get(['lastNotificationAt']);
    if(!c.coordinator||state?.coordinatorId!==c.clientId||state.settings?.notifications===false||state.settings?.snoozeUntil>now||now-lastNotificationAt<590000)return;
@@ -154,11 +171,14 @@ if(typeof importScripts==='function')importScripts('strings.js','i18n.js','core.
    if(name==='rewards-reminder')await remind(state);
    if(name==='rewards-sync'){
     await account.autoSync().catch(()=>{});
-    const c=await config(),{lastReload=0}=await browser.storage.local.get(['lastReload']);
-    if(c.slot&&c.autoRefresh&&Date.now()-lastReload>=120000)await performCommand({action:'refresh'});
+    const c=await config(),{lastReload=0,readerRefreshDue=false}=await browser.storage.local.get(['lastReload','readerRefreshDue']);
+    if(c.slot&&(c.autoRefresh||readerRefreshDue)){
+     const result=await refreshReader();
+     if(c.autoRefresh&&result.accepted===false&&Date.now()-lastReload>=120000)await performCommand({action:'refresh'});
+    }
    }
   }
-  return {config,saveConfig,api,tick,capture,getView,performCommand,remind,handle,alarm};
+  return {config,saveConfig,api,tick,capture,getView,performCommand,refreshReader,remind,handle,alarm};
  }
  return {createAdviser,isRewards,senderAllowed,bingPageRead};
 });
@@ -168,7 +188,7 @@ if(typeof chrome==='object'&&chrome.runtime?.onMessage){
  async function setup(){await chrome.storage.local.setAccessLevel({accessLevel:'TRUSTED_CONTEXTS'});
   for(const [name,periodInMinutes] of [['rewards-sync',1],['rewards-reminder',10]])if(!await chrome.alarms.get(name))await chrome.alarms.create(name,{delayInMinutes:periodInMinutes,periodInMinutes});
  }
- setup().catch(()=>{});chrome.runtime.onInstalled.addListener(()=>{setup().then(()=>adviser.performCommand({action:'scan'})).catch(()=>{});});chrome.runtime.onStartup.addListener(()=>{setup().then(()=>adviser.tick(true)).catch(()=>{});});
+ setup().then(()=>adviser.alarm('rewards-sync')).catch(()=>{});chrome.runtime.onInstalled.addListener(()=>{setup().then(()=>adviser.alarm('rewards-sync')).catch(()=>{});});chrome.runtime.onStartup.addListener(()=>{setup().then(()=>adviser.alarm('rewards-sync')).catch(()=>{});});
  chrome.alarms.onAlarm.addListener(alarm=>adviser.alarm(alarm.name).catch(()=>{}));
  chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&changes.accountSession&&changes.accountSession.oldValue?.stamp!==changes.accountSession.newValue?.stamp)chrome.runtime.sendMessage({type:'ACCOUNT_CHANGED'}).catch(()=>{});});
  chrome.runtime.onMessage.addListener((message,sender,sendResponse)=>{

@@ -354,5 +354,7 @@
   "Scegli un banner valido.": "Choose a valid banner.",
   "Immagini troppo grandi. Scegli un banner più leggero.": "Images are too large. Choose a smaller banner.",
   "Punti da riscuotere": "Points to claim",
-  "<p class=\"help\">Punti già guadagnati, ancora da riscuotere su Rewards. Non si sommano ai punti da completare oggi.</p>": "<p class=\"help\">Points already earned and waiting to be claimed on Rewards. They are excluded from points left to earn today.</p>"
+  "<p class=\"help\">Punti già guadagnati, ancora da riscuotere su Rewards. Non si sommano ai punti da completare oggi.</p>": "<p class=\"help\">Points already earned and waiting to be claimed on Rewards. They are excluded from points left to earn today.</p>",
+  "Aggiorna i contatori ogni 2 minuti": "Update counters every 2 minutes",
+  "Consigliato nei lettori. Funziona anche con le schede Rewards in background.": "Recommended for readers. Works with Rewards tabs in the background."
 }
