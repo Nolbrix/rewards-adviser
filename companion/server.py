@@ -303,7 +303,7 @@ def make_server(host='127.0.0.1',port=PORT,state_dir=None,extension_dir=None):
                 if not file.is_file():self.respond(404,{'error':'Anteprima non disponibile'});return
                 source=re.sub(r'[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}','account@example.com',file.read_text(encoding='utf-8'))
                 self.respond(200,content=source.encode('utf-8'),mime='text/javascript');return
-            public={'/preview/account-ui.js':'ui/account-ui.js','/icons/icon48.png':'icons/icon48.png','/preview/':'ui/index.html','/preview/index.html':'ui/index.html','/preview/ui.css':'ui/ui.css','/preview/ui.js':'ui/ui.js','/preview/demo.js':'ui/demo.js','/core.js':'core.js','/strings.js':'strings.js','/i18n.js':'i18n.js'}
+            public={'/account.js':'account.js','/profiles.js':'profiles.js','/preview/account-ui.js':'ui/account-ui.js','/icons/icon48.png':'icons/icon48.png','/preview/':'ui/index.html','/preview/index.html':'ui/index.html','/preview/ui.css':'ui/ui.css','/preview/ui.js':'ui/ui.js','/preview/demo.js':'ui/demo.js','/core.js':'core.js','/strings.js':'strings.js','/i18n.js':'i18n.js'}
             if self.path in public:
                 file=extension/public[self.path]
                 if not file.is_file():self.respond(404,{'error':'Anteprima non disponibile'});return
