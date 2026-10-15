@@ -1431,6 +1431,46 @@
     "message": "Consigliato nei lettori. Funziona anche con le schede Rewards in background.",
     "description": "Consigliato nei lettori. Funziona anche con le schede Rewards in background."
   },
+  "me1b4fc0af2fab269": {
+    "message": "JPG, PNG o WebP entro 2 MB; GIF animate entro 130 KB.",
+    "description": "JPG, PNG o WebP entro 2 MB; GIF animate entro 130 KB."
+  },
+  "md71b5bd258586cc6": {
+    "message": "JPG, PNG o WebP entro 6 MB; GIF animate entro 115 KB.",
+    "description": "JPG, PNG o WebP entro 6 MB; GIF animate entro 115 KB."
+  },
+  "me6bab938ad300c5b": {
+    "message": "Le GIF restano animate. Foto e banner condividono lo spazio disponibile; se serve, scegli una GIF più leggera.",
+    "description": "Le GIF restano animate. Foto e banner condividono lo spazio disponibile; se serve, scegli una GIF più leggera."
+  },
+  "m194b262b1abd9b7d": {
+    "message": "Cornice e badge seguono il tema. Il badge è decorativo e non assegna permessi speciali.",
+    "description": "Cornice e badge seguono il tema. Il badge è decorativo e non assegna permessi speciali."
+  },
+  "m38ebed49608e56fa": {
+    "message": "Foto non valida. Scegli JPG, PNG, WebP o GIF.",
+    "description": "Foto non valida. Scegli JPG, PNG, WebP o GIF."
+  },
+  "m72ed8e27ee6f1b81": {
+    "message": "Banner non valido. Scegli JPG, PNG, WebP o GIF.",
+    "description": "Banner non valido. Scegli JPG, PNG, WebP o GIF."
+  },
+  "m26e50fbafef3f53a": {
+    "message": "Scegli un banner JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 6 MB.",
+    "description": "Scegli un banner JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 6 MB."
+  },
+  "m6cf60eb4dfde4ded": {
+    "message": "Scegli una foto JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 2 MB.",
+    "description": "Scegli una foto JPG, PNG, WebP o GIF. Le immagini statiche possono arrivare a 2 MB."
+  },
+  "m5ccdb7f51cb1602a": {
+    "message": "La GIF supera lo spazio disponibile ({kb} KB). Scegli una GIF più leggera.",
+    "description": "La GIF supera lo spazio disponibile ({kb} KB). Scegli una GIF più leggera."
+  },
+  "mb96b7795925e2509": {
+    "message": "GIF non valida. Scegli un altro file.",
+    "description": "GIF non valida. Scegli un altro file."
+  },
   "extensionName": {
     "message": "Rewards Adviser"
   },
