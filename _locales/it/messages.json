@@ -1415,6 +1415,14 @@
     "message": "Immagini troppo grandi. Scegli un banner più leggero.",
     "description": "Immagini troppo grandi. Scegli un banner più leggero."
   },
+  "mded92808730420da": {
+    "message": "Punti da riscuotere",
+    "description": "Punti da riscuotere"
+  },
+  "me481353f27b72ced": {
+    "message": "<p class=\"help\">Punti già guadagnati, ancora da riscuotere su Rewards. Non si sommano ai punti da completare oggi.</p>",
+    "description": "<p class=\"help\">Punti già guadagnati, ancora da riscuotere su Rewards. Non si sommano ai punti da completare oggi.</p>"
+  },
   "extensionName": {
     "message": "Rewards Adviser"
   },
