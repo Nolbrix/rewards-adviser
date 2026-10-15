@@ -46,7 +46,10 @@
   const usable=reading?.status==='ok'&&reading.date===primary.date&&Number.isFinite(reading.observedAt)&&reading.observedAt>=now-120000&&reading.observedAt<=now+30000;
   const next={...primary,diagnostics:{...primary.diagnostics,searchStatus:usable?'ok':reading?.status==='ok'?'unavailable':reading?.status||'unavailable'}};
   if(!usable)return next;
-  return {...next,searchMode:reading.mode,observedAt:Math.min(primary.observedAt,reading.observedAt),coverage:{...primary.coverage,...reading.coverage},activities:[...(primary.activities||[]).filter(a=>!['search','desktop','mobile'].includes(a.category)),...reading.activities]};
+  // withSearch verifies the Bing identity before merging. A newer balance from
+  // that response can advance a dashboard left open, while an older cache cannot.
+  const balance=core.validNumber(reading.balance)&&Number.isFinite(primary.observedAt)&&reading.observedAt>=primary.observedAt?reading.balance:primary.balance;
+  return {...next,balance,searchMode:reading.mode,observedAt:Math.min(primary.observedAt,reading.observedAt),coverage:{...primary.coverage,...reading.coverage},activities:[...(primary.activities||[]).filter(a=>!['search','desktop','mobile'].includes(a.category)),...reading.activities]};
  }
  return {fromData,emailFromHome,identityStatus,merge};
 });

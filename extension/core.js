@@ -1,7 +1,7 @@
 /* Shared pure data rules; usable in extension pages, workers and Node tests. */
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.RewardsCore=api;})(globalThis,()=>{
  'use strict';
- const CATEGORIES=['daily','extra','search','desktop','mobile','phone'];
+ const CATEGORIES=['daily','extra','claim','search','desktop','mobile','phone'];
  const SEARCH_STATUSES=['ok','not-signed-in','account-mismatch','unavailable','identity-unverified'];
  const DEFAULT_NAMES=['Account 1','Account 2','Account 3'];
  const defaultAlias=slot=>DEFAULT_NAMES[Number(slot)-1]||'Pannello';
@@ -34,20 +34,22 @@
   for(const raw of [...(override?[override]:phone.present||phone.required?[phone.item]:[]),...(current?snapshot.activities||[]:[]),...manual]) {
    if(!raw||!CATEGORIES.includes(raw.category)||raw.status==='not-applicable')continue;
    if(combined?['desktop','mobile'].includes(raw.category):raw.category==='search')continue;
-   const id=String(raw.id||`${raw.category}:${raw.title}`),semantic=raw.category==='phone'&&articleId(id)?'phone-articles':id;if(seen.has(semantic))continue;seen.add(semantic);
+   const id=String(raw.id||`${raw.category}:${raw.title}`),category=raw.category==='extra'&&id==='pointsclaim'?'claim':raw.category,semantic=raw.category==='phone'&&articleId(id)?'phone-articles':id;if(seen.has(semantic))continue;seen.add(semantic);
    const total=validNumber(raw.total)?raw.total:null,earned=validNumber(raw.earned)?raw.earned:null;
    const status=['complete','incomplete','unknown'].includes(raw.status)?raw.status:'unknown';
    const remaining=total!==null&&earned!==null&&earned<=total?Math.max(0,total-earned):null;
-   items.push({...raw,id,total,earned,status,remaining,active:!account.error&&(raw.source==='phone-screen'?phone.active:raw.source==='manual'||usable)});
+   items.push({...raw,id,category,total,earned,status,remaining,active:!account.error&&(raw.source==='phone-screen'?phone.active:raw.source==='manual'||usable)});
   }
-  const incomplete=items.filter(a=>a.status==='incomplete').length,unknown=items.filter(a=>a.status==='unknown').length;
+  const earning=items.filter(a=>a.category!=='claim');
+  const incomplete=earning.filter(a=>a.status==='incomplete').length,unknown=earning.filter(a=>a.status==='unknown').length;
   const missingCoverage=!current||(combined?['daily','extra','search']:['daily','extra','search','mobile']).some(k=>snapshot.coverage?.[k]!==true);
-  const partial=!usable||missingCoverage||unknown>0||((phone.present||phone.required)&&!phone.active&&!override)||items.some(a=>a.status!=='complete'&&a.remaining===null);
-  const hasProgress=items.some(a=>a.active&&a.remaining!==null&&a.status!=='unknown')||!!(usable&&['daily','extra'].some(k=>snapshot.coverage?.[k]===true));
-  const remaining=items.reduce((n,a)=>n+(a.active&&a.status==='incomplete'&&a.remaining!==null?a.remaining:0),0);
+  const partial=!usable||missingCoverage||unknown>0||((phone.present||phone.required)&&!phone.active&&!override)||earning.some(a=>a.status!=='complete'&&a.remaining===null);
+  const hasProgress=earning.some(a=>a.active&&a.remaining!==null&&a.status!=='unknown')||!!(usable&&['daily','extra'].some(k=>snapshot.coverage?.[k]===true));
+  const remaining=earning.reduce((n,a)=>n+(a.active&&a.status==='incomplete'&&a.remaining!==null?a.remaining:0),0);
+  const claimable=items.reduce((n,a)=>n+(a.category==='claim'&&a.active&&a.status==='incomplete'&&a.remaining!==null?a.remaining:0),0);
   const groups=Object.fromEntries(CATEGORIES.map(c=>[c,items.filter(a=>a.category===c)]));
-  const actionable=items.filter(a=>a.active&&a.status==='incomplete');
-  return {today,current,fresh,hasProgress,stale:!!snapshot&&!fresh,remaining,incomplete,unknown,partial,completed:hasProgress&&!partial&&items.length>0&&incomplete===0,items,groups,actionable};
+  const actionable=earning.filter(a=>a.active&&a.status==='incomplete');
+  return {today,current,fresh,hasProgress,stale:!!snapshot&&!fresh,remaining,claimable,incomplete,unknown,partial,completed:hasProgress&&!partial&&earning.length>0&&incomplete===0,items,groups,actionable};
  }
  function reminderAccounts(accounts,now=Date.now(),timezone='Europe/Rome') {return accounts.map(a=>({account:a,summary:summarize(a,now,timezone)})).filter(a=>a.summary.actionable.length>0);}
  function sanitizeDump(snapshot={}) {

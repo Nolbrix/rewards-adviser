@@ -81,7 +81,9 @@
      recognized=true;if(items.length||!x.model.dailySetItems.length){s.coverage.daily=true;items.forEach((p,index)=>add(promotion(p,'daily',index)));}
     }
     if(x.type==='pointsclaim'&&number(x.model?.pointClaim?.points)!==null){
-     const total=number(x.model.pointClaim.points);recognized=true;add({id:'pointsclaim',title:'Punti bonus pronti da richiedere',category:'extra',total,earned:total===0?total:0,status:total===0?'complete':'incomplete',source:'page',url:null});
+     // This pool contains credits already earned, potentially in earlier months.
+     // Keep it distinct from activities whose points still need to be earned today.
+     const total=number(x.model.pointClaim.points);recognized=true;add({id:'pointsclaim',title:'Punti bonus pronti da richiedere',category:'claim',total,earned:total===0?total:0,status:total===0?'complete':'incomplete',source:'page',url:null});
     }
     if(bonusLabels[x.type]&&x.model?.bonus){const b=x.model.bonus,complete=b.state==='complete';
      const total=number(complete?b.prevPointsEarned:b.pointsMax);add({id:x.type,title:bonusLabels[x.type],category:'extra',total,earned:complete?total:null,status:complete?'complete':'unknown',source:'page',url:null});
