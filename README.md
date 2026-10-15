@@ -2,6 +2,8 @@
 
 A local Microsoft Rewards dashboard for **up to three accounts** on Microsoft Edge, Chrome and Brave. The extension shows detected balances, daily activities, bonuses and search progress, with optional reminders every ten minutes.
 
+**made by Nolbrix** · Version 1.4.1 introduces a burgundy theme, a creator profile banner and an original trophy-and-points extension icon.
+
 **Windows 10/11 and Python 3.11+ are required.** No Node.js installation is needed to use the extension. This is an independent project, unaffiliated with Microsoft.
 
 ## Install
