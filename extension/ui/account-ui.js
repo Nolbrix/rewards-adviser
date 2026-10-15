@@ -1,20 +1,29 @@
 (()=>{
  'use strict';const $=id=>document.getElementById(id),tr=globalThis.RewardsI18n?.t||(s=>s),demo=!globalThis.chrome?.runtime?.id;
- let current=null,register=false,photo='',backups=[],restored=[],busy=false;
+ let current=null,register=false,photo='',banner='',backups=[],restored=[],busy=false,visualGeneration=0;
  async function send(type,data={}){if(demo)throw Error(tr('Il login è disponibile nell’estensione installata.'));const r=await chrome.runtime.sendMessage({type,...data,account:current?.account});if(!r?.ok)throw Error(tr(r?.error||'Operazione non disponibile.'));return r.data;}
  function feedback(message,error=false){$('account-feedback').textContent=message;$('account-feedback').classList.toggle('error',error);}
- function appearance(profile){document.body.dataset.theme=profile?.theme||'neutral';const image=profile?.photo||'';$('profile-photo').hidden=!image;$('profile-initial').hidden=!!image;if(image)$('profile-photo').src=image;else $('profile-photo').removeAttribute('src');}
- function render(view){if(current?.account?.stamp!==view?.account?.stamp){backups=[];restored=[];photo='';$('cloud-backups').replaceChildren();}current=view;const user=view?.user,profile=view?.profile;
-  $('account-login').hidden=!!user;$('account-personalize').hidden=!user;$('account-caption').textContent=user?(profile?.name||user.name||tr('Il mio profilo')):tr('Accedi');appearance(user?profile:null);
-  $('account-config-status').textContent=view?.configured?'':tr('Il servizio di accesso è in preparazione. Il riepilogo locale resta disponibile.');$('google-signin').disabled=!view?.configured||!view?.googleReady;$('email-submit').disabled=!view?.configured;
-  if(user){$('app-identity').textContent=user.email;$('verify-section').hidden=user.verified;$('app-name').value=profile?.name||user.name||'';photo=profile?.photo||'';document.querySelector(`input[name="theme"][value="${profile?.theme||'blue'}"]`).checked=true;}else{$('app-identity').textContent='';$('app-name').value='';}
+ function imageAt(id,value){const image=$(id);image.hidden=!value;if(value)image.src=value;else image.removeAttribute('src');}
+ function appearance(profile){const active=!!(current?.user&&profile),p=active?RewardsAccount.cleanProfile(profile):null,name=active?(p.name||current.user.name||tr('Il mio profilo')):tr('Il tuo profilo');
+  document.body.dataset.theme=p?.theme||'neutral';const photo=p?.photo||'';for(const id of ['profile-photo','strip-photo','preview-photo'])imageAt(id,photo);for(const id of ['profile-initial','strip-initial','preview-initial'])$(id).hidden=!!photo;
+  $('account-caption').textContent=active?name:tr('Accedi');$('strip-name').textContent=name;$('preview-name').textContent=name;$('strip-hint').textContent=active?tr('Il tuo spazio Rewards'):tr('Accedi e scegli il tuo stile');
+  for(const id of ['strip-role','preview-role']){$(id).hidden=!active;$(id).textContent=active?RewardsAccount.themeRole(p.theme):'';}
+  for(const id of ['profile-strip','profile-preview','account-open']){const surface=$(id);surface.dataset.bannerStyle=p?.bannerStyle||'theme';if(p?.bannerStyle==='image'&&p.banner)surface.style.setProperty('--profile-cover',`url("${p.banner}")`);else surface.style.removeProperty('--profile-cover');}
  }
- async function run(action){if(busy)return;busy=true;feedback('');const buttons=[...$('account-dialog').querySelectorAll('button')].filter(b=>b.id!=='account-close');const disabled=buttons.map(b=>b.disabled);buttons.forEach(b=>b.disabled=true);try{await action();}catch(e){feedback(e.message,true);}finally{buttons.forEach((b,i)=>b.disabled=disabled[i]);busy=false;if(current){$('google-signin').disabled=!current.configured||!current.googleReady;$('email-submit').disabled=!current.configured;}}}
+ function draft(){return {name:$('app-name').value,theme:document.querySelector('input[name="theme"]:checked')?.value||current?.profile?.theme||'blue',photo,banner,bannerStyle:$('app-banner-style').value||'theme'};}
+ function bannerChoice(){const option=$('app-banner-style').querySelector('option[value="image"]');option.disabled=!banner;$('remove-profile-banner').disabled=!banner;}
+ function render(view){if(current?.account?.stamp!==view?.account?.stamp){visualGeneration++;backups=[];restored=[];photo='';banner='';$('cloud-backups').replaceChildren();}current=view;const user=view?.user,profile=view?.profile;
+  $('account-login').hidden=!!user;$('account-personalize').hidden=!user;appearance(user?profile:null);
+  $('account-config-status').textContent=view?.configured?'':tr('Il servizio di accesso è in preparazione. Il riepilogo locale resta disponibile.');$('google-signin').disabled=!view?.configured||!view?.googleReady;$('email-submit').disabled=!view?.configured;
+  if(user){$('app-identity').textContent=user.email;$('verify-section').hidden=user.verified;$('app-name').value=profile?.name||user.name||'';photo=profile?.photo||'';banner=profile?.banner||'';$('app-banner-style').value=profile?.bannerStyle||'theme';document.querySelector(`input[name="theme"][value="${profile?.theme||'blue'}"]`).checked=true;}else{$('app-identity').textContent='';$('app-name').value='';photo='';banner='';$('app-banner-style').value='theme';}bannerChoice();
+ }
+ async function run(action){if(busy)return;busy=true;feedback('');const buttons=[...$('account-dialog').querySelectorAll('button')].filter(b=>b.id!=='account-close');const disabled=buttons.map(b=>b.disabled);buttons.forEach(b=>b.disabled=true);try{await action();}catch(e){feedback(e.message,true);}finally{buttons.forEach((b,i)=>b.disabled=disabled[i]);busy=false;bannerChoice();if(current){$('google-signin').disabled=!current.configured||!current.googleReady;$('email-submit').disabled=!current.configured;}}}
  async function synchronize(){try{const r=await send('AUTH_CLOUD_SAVE');if(r.saved)feedback(tr('Backup privato salvato.'));}catch(e){feedback(e.message,true);}}
  function showReaders(readers){restored=readers;$('cloud-backups').replaceChildren();for(const [index,reader] of restored.entries()){const row=document.createElement('div');row.className='cloud-reader';const label=document.createElement('span');label.textContent=`${reader.alias} · ${reader.email} · ${reader.browser}`;const button=document.createElement('button');button.type='button';button.textContent=tr('Usa in questo profilo');button.dataset.reader=index;row.append(label,button);$('cloud-backups').append(row);}}
  async function initializeCloud(){const result=await send('AUTH_CLOUD_INIT');render(result);showReaders(result.readers);if(result.readers.length)feedback(tr('Tema e foto recuperati. Scegli il lettore da usare in questo profilo del browser.'));else await synchronize();}
  async function signed(view){render(view);$('app-password').value='';feedback(tr('Accesso completato.'));if(view.user?.verified)await initializeCloud();else feedback(tr('Verifica la tua email per attivare il backup privato.'));}
- $('account-open').onclick=async()=>{$('account-dialog').showModal();feedback('');try{const v=demo?{configured:false,user:null}:await send('AUTH_VIEW');render(v);if(v.user?.verified&&v.needsCloudInit)await initializeCloud();}catch(e){feedback(e.message,true);}};
+ async function openProfile(){$('account-dialog').showModal();feedback('');try{const v=demo?{configured:false,user:null}:await send('AUTH_VIEW');render(v);if(v.user?.verified&&v.needsCloudInit)await initializeCloud();}catch(e){feedback(e.message,true);}}
+ $('account-open').onclick=openProfile;$('profile-strip').onclick=openProfile;
  $('account-close').onclick=()=>{$('account-dialog').close();$('app-password').value='';appearance(current?.user?current.profile:null);};
  function mode(signup){register=signup;$('show-signin').setAttribute('aria-pressed',String(!signup));$('show-signup').setAttribute('aria-pressed',String(signup));$('email-submit').textContent=tr(signup?'Crea account':'Accedi con email');$('register-hint').hidden=!signup;$('app-password').autocomplete=signup?'new-password':'current-password';}
  $('show-signin').onclick=()=>mode(false);$('show-signup').onclick=()=>mode(true);
@@ -24,15 +33,28 @@
  $('verify-email').onclick=()=>run(async()=>{await send('AUTH_VERIFY');feedback(tr('Email di verifica inviata. Controlla la tua posta.'));});
  $('recheck-email').onclick=()=>run(async()=>{render(await send('AUTH_RECHECK'));if(current.user?.verified)await initializeCloud();else feedback(tr('L’email non risulta ancora verificata.'));});
  $('account-signout').onclick=()=>run(async()=>{render(await send('AUTH_SIGNOUT'));$('cloud-backups').replaceChildren();backups=[];restored=[];feedback(tr('Hai effettuato l’uscita. I lettori Rewards restano collegati sul PC.'));});
- $('app-photo-input').onchange=()=>run(async()=>{
-  const file=$('app-photo-input').files[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>2*1024*1024)throw Error(tr('Scegli una foto JPG, PNG o WebP entro 2 MB.'));
-  const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();const size=Math.min(image.naturalWidth,image.naturalHeight);if(!size)throw Error(tr('Foto non valida.'));
-   const canvas=document.createElement('canvas');canvas.width=canvas.height=160;canvas.getContext('2d').drawImage(image,(image.naturalWidth-size)/2,(image.naturalHeight-size)/2,size,size,0,0,160,160);photo=canvas.toDataURL('image/jpeg',.85);appearance({...current.profile,photo});
-  }finally{URL.revokeObjectURL(url);$('app-photo-input').value='';}
- });
- $('remove-profile-photo').onclick=()=>{photo='';appearance({...current.profile,photo});};
- $('appearance-form').onchange=event=>{if(event.target.name==='theme')appearance({...current.profile,photo,theme:event.target.value});};
- $('appearance-form').onsubmit=event=>{event.preventDefault();run(async()=>{const theme=document.querySelector('input[name="theme"]:checked').value;render(await send('AUTH_PROFILE',{profile:{name:$('app-name').value,theme,photo}}));feedback(tr('Profilo salvato su questo browser.'));if(current.user.verified)await synchronize();});};
+ async function raster(file,isBanner){
+  if(!file)return null;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>(isBanner?6:2)*1024*1024)throw Error(tr(isBanner?'Scegli un banner JPG, PNG o WebP entro 6 MB.':'Scegli una foto JPG, PNG o WebP entro 2 MB.'));
+  const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();if(!image.naturalWidth||!image.naturalHeight)throw Error(tr('Foto non valida.'));
+   const ratio=isBanner?4:1,sw=Math.min(image.naturalWidth,image.naturalHeight*ratio),sh=sw/ratio;let width=isBanner?960:160;const budget=isBanner?Math.min(160000,230000-photo.length):Math.min(180000,230000-banner.length);
+   while(width>=(isBanner?320:80)){const canvas=document.createElement('canvas');canvas.width=width;canvas.height=Math.round(width/ratio);canvas.getContext('2d').drawImage(image,(image.naturalWidth-sw)/2,(image.naturalHeight-sh)/2,sw,sh,0,0,canvas.width,canvas.height);
+    for(const quality of [.86,.72,.58,.44]){const value=canvas.toDataURL('image/jpeg',quality);if(value.length<=budget)return value;}width=Math.floor(width*.75);
+   }throw Error(tr('Immagini troppo grandi. Scegli un banner più leggero.'));
+  }finally{URL.revokeObjectURL(url);}
+ }
+ async function upload(isBanner){const input=$(isBanner?'app-banner-input':'app-photo-input'),version=visualGeneration,stamp=current?.account?.stamp;
+  if(!current?.user)throw Error(tr('Accedi per personalizzare il profilo.'));
+  try{const value=await raster(input.files[0],isBanner);if(!value)return;if(version!==visualGeneration||stamp!==current?.account?.stamp)throw Error(tr('Accesso annullato.'));
+   if(isBanner){banner=value;bannerChoice();$('app-banner-style').value='image';}else photo=value;appearance(draft());
+  }finally{input.value='';}
+ }
+ $('app-photo-input').onchange=()=>run(()=>upload(false));$('app-banner-input').onchange=()=>run(()=>upload(true));
+ $('remove-profile-photo').onclick=()=>{photo='';appearance(draft());};
+ $('remove-profile-banner').onclick=()=>{banner='';$('app-banner-style').value='theme';bannerChoice();appearance(draft());};
+ $('app-name').oninput=()=>{if(current?.user)appearance(draft());};
+ $('appearance-form').onchange=event=>{if(event.target.name==='theme'||event.target.id==='app-banner-style')appearance(draft());};
+ $('appearance-form').onsubmit=event=>{event.preventDefault();run(async()=>{render(await send('AUTH_PROFILE',{profile:draft()}));feedback(tr('Profilo salvato su questo browser.'));if(current.user.verified)await synchronize();});};
+ $('account-dialog').addEventListener('close',()=>{visualGeneration++;photo=current?.profile?.photo||'';banner=current?.profile?.banner||'';$('app-banner-style').value=current?.profile?.bannerStyle||'theme';bannerChoice();appearance(current?.user?current.profile:null);});
  $('cloud-save').onclick=()=>run(synchronize);
  $('cloud-load').onclick=()=>run(async()=>{
   backups=(await send('AUTH_CLOUD_LIST')).backups;$('cloud-backups').replaceChildren();
@@ -50,5 +72,5 @@
   }else if(target.dataset.reader!==undefined){const reader=restored[Number(target.dataset.reader)];await send('AUTH_READER',{slot:reader.slot});feedback(tr('Lettore recuperato. Apri Rewards e accedi all’account Microsoft corrispondente.'));}
  });};
  if(!demo)send('AUTH_VIEW').then(async v=>{render(v);if(v.user?.verified&&v.needsCloudInit)await initializeCloud();}).catch(()=>{});
- if(!demo)chrome.runtime.onMessage.addListener((message,sender)=>{const worker=new URL('../background.js',location.href).href;if(message?.type==='ACCOUNT_CHANGED'&&sender.id===chrome.runtime.id&&sender.url===worker){backups=[];restored=[];photo='';$('cloud-backups').replaceChildren();appearance(null);send('AUTH_VIEW').then(render).catch(()=>{});}});
+ if(!demo)chrome.runtime.onMessage.addListener((message,sender)=>{const worker=new URL('../background.js',location.href).href;if(message?.type==='ACCOUNT_CHANGED'&&sender.id===chrome.runtime.id&&sender.url===worker){visualGeneration++;backups=[];restored=[];photo='';banner='';$('cloud-backups').replaceChildren();appearance(null);send('AUTH_VIEW').then(render).catch(()=>{});}});
 })();
